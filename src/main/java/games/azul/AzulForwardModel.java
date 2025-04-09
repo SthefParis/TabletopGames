@@ -171,6 +171,10 @@ public class AzulForwardModel extends StandardForwardModel {
             System.out.println("No action available");
         }
 
+        if (actions.isEmpty()) {
+            throw new IllegalStateException("No valid actions available");
+        }
+
         return actions;
     }
 
@@ -486,7 +490,7 @@ public class AzulForwardModel extends StandardForwardModel {
         for (int row = 0; row < playerBoard.playerPatternWall.length; row++) { // Iterate rows
             if (!playerBoard.isRowFull(row)) { // Ensure the row is valid
                 PlaceTileAction action = new PlaceTileAction(
-                        playerID, ags.getPickedTile(), ags.getNumOfTilesPicked(), row
+                        playerID, ags.getTilesPicked(), ags.getNumOfTilesPicked(), row
                 );
                 actions.add(action);
             }

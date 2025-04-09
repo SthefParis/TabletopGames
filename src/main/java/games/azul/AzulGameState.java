@@ -37,18 +37,18 @@ public class AzulGameState extends AbstractGameState {
     HashMap<AzulTile, Integer> lid;
     AzulWallPattern wall;
 
+    private int hasFirstPlayerTile = -1;
     private AzulTile pickedTile;
     private int numOfTilesPicked;
     private boolean hasPickedFromCenter = false;
     int[] playerScore;
+    private int tilesPickedUp = -1;
 
     /**
      * @param gameParameters - game parameters.
      * @param nPlayers       - number of players in the game
      */
-    public AzulGameState(AbstractParameters gameParameters, int nPlayers) {
-        super(gameParameters, nPlayers);
-    }
+    public AzulGameState(AbstractParameters gameParameters, int nPlayers) { super(gameParameters, nPlayers); }
 
     public List<AzulFactoryBoard> getAllFactoryBoards(){ return factoryBoards; }
     public AzulFactoryBoard getFactory(int factoryID){ return factoryBoards.get(factoryID); }
@@ -57,7 +57,7 @@ public class AzulGameState extends AbstractGameState {
     public AzulPlayerBoard getPlayerBoard(int playerID){ return playerBoards.get(playerID); }
 
     public void setPickedTile(AzulTile pickedTile) { this.pickedTile = pickedTile; }
-    public AzulTile getPickedTile() { return pickedTile; }
+    public AzulTile getTilesPicked() { return pickedTile; }
     public void setNumOfTilesPicked(int numOfTilesPicked) { this.numOfTilesPicked = numOfTilesPicked; }
     public int getNumOfTilesPicked() { return numOfTilesPicked; }
 
@@ -90,6 +90,13 @@ public class AzulGameState extends AbstractGameState {
 
     public void setHasPickedFromCenter(boolean hasPickedFromCenter) { this.hasPickedFromCenter = hasPickedFromCenter; }
     public boolean hasPickedFromCenter() { return hasPickedFromCenter; }
+
+    public boolean hasFirstPlayerTile(int playerId) {
+        if (playerId == hasFirstPlayerTile) {
+            return true;
+        }
+        return false;
+    }
 
     public void setPlayerScore(int points, int playerID) { playerScore[playerID] = points; }
     public void addPlayerPoint(int playerID, int points) { playerScore[playerID] += points; }

@@ -6,82 +6,79 @@ import gui.views.ComponentView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Visual component responsible for rendering the tiles in the center.
+ * This component draws a grid of colored squares representing Azul tiles.
+ */
 public class AzulCenterView extends ComponentView {
 
-    private AzulCenter center;
+    private final AzulCenter center;
 
-    int offsetX = 10;
-    int offsetY = 10;
+    private final int tileSize;
+    private final int spacing;
+    private final int tilesPerRow;
 
-    public AzulCenterView(AzulCenter center) {
+    private final int offsetX = 10;
+    private final int offsetY = 10;
+
+
+    /**
+     * Constructs the view for displaying the Azul center tiles.
+     *
+     * @param center - The AzulCenter model containing the tiles.
+     * @param tileSize - The size of each tile (width and height).
+     * @param tilesPerRow - The maximum number of tiles per row in the layout.
+     */
+    public AzulCenterView(AzulCenter center, int tileSize, int spacing, int tilesPerRow) {
         super(center, 0, 0);
         this.center = center;
+        this.tileSize = tileSize;
+        this.spacing = spacing;
+        this.tilesPerRow = tilesPerRow;
     }
 
+    /**
+     * Draws all Azul tiles in a grid format with their corresponding colours.
+     *
+     * @param g1 - The <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g1) {
         Graphics2D g = (Graphics2D) g1;
 
-        drawCenter(g, this.center, offsetX, offsetY);
+        drawTilesGrid(g, center.getTiles(), offsetX, offsetY);
     }
 
-    private void drawCenter(Graphics2D g, AzulCenter center, int x, int y) {
-        // Set up tile size and spacing
-        int tileSize = 40;  // You can adjust this value
-        int spacing = 10;  // Space between tiles
-
-        List<AzulTile> tiles = center.getTiles();
-        int rowCount = 0;
-        int colCount = 0;
-
-        // Set the font for the tile color text
+    /**
+     * Renders the tiles as a grid of colored rectangles.
+     *
+     * @param g
+     * @param tiles
+     * @param offsetX
+     * @param offsetY
+     */
+    private void drawTilesGrid(Graphics2D g, List<AzulTile> tiles, int offsetX, int offsetY) {
         g.setFont(new Font("Arial", Font.PLAIN, 12));
 
-        // Loop through each tile and draw the text representing its color
-        for (AzulTile tile : tiles) {
-            // Calculate the position of the tile
-            int tileX = x + (colCount * (tileSize + spacing));
-            int tileY = y + (rowCount * (tileSize + spacing));
+        List<TilePosition> positions = AzulTileLayout.computeLayout(tiles, tileSize, spacing, tilesPerRow);
+        for (TilePosition pos : positions) {
+            int drawX = offsetX + pos.x();
+            int drawY = offsetY + pos.y();
+            Color tileColor = (pos.tile() != null && pos.tile() != AzulTile.Empty)
+                    ? getTileColor(pos.tile())
+                    : Color.LIGHT_GRAY;
 
-            Color tileColor = (tile != null && tile != AzulTile.Empty) ? getTileColor(tile) : Color.LIGHT_GRAY;
             g.setColor(tileColor);
-            g.fillRect(tileX, tileY, tileSize, tileSize);
+            g.fillRect(drawX, drawY, tileSize, tileSize);
 
-            // Draw the tile as an empty rectangle (no fill)
-            g.setColor(Color.BLACK);  // Set the color for the rectangle's border
-            g.drawRect(tileX, tileY, tileSize, tileSize);
-
-            // Move to the next column
-            colCount++;
-
-            // If we have reached the end of the row, move to the next row
-            if (colCount >= 5) {  // Assuming a max of 5 tiles per row (adjust if needed)
-                colCount = 0;
-                rowCount++;
-            }
+            g.setColor(Color.BLACK);
+            g.drawRect(drawX, drawY, tileSize, tileSize);
         }
-
     }
 
-    public void updateComponent() {
-        this.removeAll();
-        List<AzulTile> tiles = center.getTiles();
-
-        for (AzulTile tile : tiles) {
-            JLabel tileLabel = new JLabel(tile.toString());
-            tileLabel.setOpaque(true);
-            tileLabel.setBackground(Color.LIGHT_GRAY);
-            tileLabel.setPreferredSize(new Dimension(40,40));
-            this.add(tileLabel);
-        }
-
-        revalidate();
-        repaint();
-    }
-
-    // Helper function to get colors for Azul tiles
     private Color getTileColor(AzulTile tile) {
         return switch (tile) {
             case White -> AzulTile.White.getColor();
@@ -92,5 +89,27 @@ public class AzulCenterView extends ComponentView {
             case FirstPlayer -> AzulTile.FirstPlayer.getColor();
             default -> AzulTile.Empty.getColor();
         };
+    }
+
+    // Helper record to store tile layout info
+    private record TilePosition(int x, int y, AzulTile tile) {}
+
+    // Layout helper class to compute tile positions
+    private static class AzulTileLayout {
+        public static List<TilePosition> computeLayout(List<AzulTile> tiles, int tileSize, int spacing, int tilesPerRow) {
+            List<TilePosition> positions = new ArrayList<>();
+            int row = 0, col = 0;
+            for (AzulTile tile : tiles) {
+                int x = col * (tileSize + spacing);
+                int y = row * (tileSize + spacing);
+                positions.add(new TilePosition(x, y, tile));
+                col++;
+                if (col >= tilesPerRow) {
+                    col = 0;
+                    row++;
+                }
+            }
+            return positions;
+        }
     }
 }

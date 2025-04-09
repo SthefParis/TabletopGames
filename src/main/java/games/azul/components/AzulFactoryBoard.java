@@ -112,22 +112,20 @@ public class AzulFactoryBoard extends Component {
         System.out.println("Factory board before: " + Arrays.toString(factoryBoard));
         System.out.println("Selected: " + tile.getTileType());
 
-        boolean tileRemoved = false;
-        int tilesRemoved = 0;
+        int numTilesRemoved = 0;
 
         for (int i=0; i<factoryBoard.length; i++) {
             if (factoryBoard[i] == tile) {
                 factoryBoard[i] = AzulTile.Empty;
-                tilesRemoved++;
-                tileRemoved = true;
+                numTilesRemoved++;
             }
         }
 
-        ags.setNumOfTilesPicked(tilesRemoved);
+        ags.setNumOfTilesPicked(numTilesRemoved);
 
         System.out.println("Factory board after: " + Arrays.toString(factoryBoard));
-        System.out.println("Number of tiles removed: " + tilesRemoved);
-        return tileRemoved;
+        System.out.println("Number of tiles removed: " + numTilesRemoved);
+        return numTilesRemoved > 0;
     }
 
     public int getFactoryNum() {

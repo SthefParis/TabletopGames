@@ -9,6 +9,9 @@ import games.azul.tiles.AzulTile;
 
 import java.util.Objects;
 
+/**
+ * Action representing placing tiles on a player's board
+ */
 public class PlaceTileAction extends AbstractAction implements IPrintable {
 
     private final int playerID;
@@ -17,6 +20,14 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
     private final int row;
     private boolean inFloorLine;
 
+    /**
+     * Constructor for placing a tile action.
+     *
+     * @param playerID - The ID of the player performing the action.
+     * @param tile - The tile being placed.
+     * @param numOfTiles - The number of tiles to place.
+     * @param row - The pattern line row to place tiles in.
+     */
     public PlaceTileAction(int playerID, AzulTile tile, int numOfTiles, int row) {
         this.playerID = playerID;
         this.tile = tile;
@@ -25,6 +36,12 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
         this.inFloorLine = false;
     }
 
+    /**
+     * Executes the action of placing tiles on the temporary board or the floor line.
+     *
+     * @param gs - The game state.
+     * @return True if the action was processed.
+     */
     @Override
     public boolean execute(AbstractGameState gs) {
         AzulGameState ags = (AzulGameState) gs;
@@ -35,14 +52,20 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
         return true;
     }
 
+    /**
+     * Handles tile placement logic including fallback to floor line if pattern row is full.
+     *
+     * @param ags - The game state.
+     */
     public void placeTileOnTempBoard(AzulGameState ags){
-        int placedTiles = 0;
         AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
-        for (int i=0; i < numOfTiles; i++) {
-            boolean tilePlaced = playerBoard.placeTileInPatternLine(ags, tile, row);
+        int numOfTilesPlaced = 0;
 
-            if (tilePlaced) {
-                placedTiles++;
+        for (int i = 0; i < numOfTiles; i++) {
+            boolean tilePlacedInPatternLine = playerBoard.placeTileInPatternLine(ags, tile, row);
+
+            if (tilePlacedInPatternLine) {
+                numOfTilesPlaced++;
                 System.out.println("Successfully placed " + tile.getTileType() + " tile " + (i + 1) + " out of " + numOfTiles + " in row " + row);
             }
             else {
@@ -53,10 +76,11 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
             }
         }
 
-        if (placedTiles == numOfTiles) {
+        //TESTING
+        if (numOfTilesPlaced == numOfTiles) {
             System.out.println("All " + numOfTiles + " tiles successfully placed in row " + row);
         } else {
-            System.out.println((numOfTiles - placedTiles) + " tiles moved to the floor line.");
+            System.out.println((numOfTiles - numOfTilesPlaced) + " tiles moved to the floor line.");
         }
     }
 
