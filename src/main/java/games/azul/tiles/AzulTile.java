@@ -39,4 +39,18 @@ public enum AzulTile {
     public AzulTile getTileType() {
         return this;
     }
+
+    public String getColourAsString(Color color) {
+        String colorAsString = "";
+
+        if (color == Color.WHITE) colorAsString = "White";
+        if (color == Color.BLACK) colorAsString = "Black";
+        if (color == Color.RED) colorAsString = "Red";
+        if (color == Color.ORANGE) colorAsString = "Orange";
+        if (color == Color.BLUE) colorAsString = "Blue";
+        if (color == Color.MAGENTA) colorAsString = "Magenta";
+
+
+        return colorAsString;
+    }
 }

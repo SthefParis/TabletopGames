@@ -1,0 +1,7 @@
+{
+  "game" : "Azul",
+  "nPlayers" : 2,
+  "matchups" : 1,
+  "listener": "json/listeners/azul_listener.json",
+  "destDir" : "outputdir"
+}

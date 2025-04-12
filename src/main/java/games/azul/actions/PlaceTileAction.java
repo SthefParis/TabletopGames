@@ -45,8 +45,8 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
     @Override
     public boolean execute(AbstractGameState gs) {
         AzulGameState ags = (AzulGameState) gs;
-        System.out.println("Executing PlaceTileAction for Player "  + playerID);
-        System.out.println("Placing on Temp Board");
+        //System.out.println("Executing PlaceTileAction for Player "  + playerID);
+        //System.out.println("Placing on Temp Board");
         placeTileOnTempBoard(ags);
 
         return true;
@@ -66,21 +66,21 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
 
             if (tilePlacedInPatternLine) {
                 numOfTilesPlaced++;
-                System.out.println("Successfully placed " + tile.getTileType() + " tile " + (i + 1) + " out of " + numOfTiles + " in row " + row);
+                //System.out.println("Successfully placed " + tile.getTileType() + " tile " + (i + 1) + " out of " + numOfTiles + " in row " + row);
             }
             else {
                 inFloorLine = true;
-                System.out.println("Failed to place " + tile.getTileType() + " tile " + (i + 1) + "/" + numOfTiles + " in row " + row + ". Moving to floor line.");
+                //System.out.println("Failed to place " + tile.getTileType() + " tile " + (i + 1) + "/" + numOfTiles + " in row " + row + ". Moving to floor line.");
                 playerBoard.placeTileInFloorLine(ags, tile);
-                System.out.println("Floor Line main");
+                //System.out.println("Floor Line main");
             }
         }
 
         //TESTING
         if (numOfTilesPlaced == numOfTiles) {
-            System.out.println("All " + numOfTiles + " tiles successfully placed in row " + row);
+            //System.out.println("All " + numOfTiles + " tiles successfully placed in row " + row);
         } else {
-            System.out.println((numOfTiles - numOfTilesPlaced) + " tiles moved to the floor line.");
+            //System.out.println((numOfTiles - numOfTilesPlaced) + " tiles moved to the floor line.");
         }
     }
 

@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class AzulCenter extends Component {
 
-    private List<AzulTile> center;
+    public List<AzulTile> center;
 
     public AzulCenter() { super(CoreConstants.ComponentType.BOARD, "AzulCenter"); }
 
@@ -31,11 +31,9 @@ public class AzulCenter extends Component {
     }
 
     /**
-     * Adds a single tile to the center.
-     *
-     * @param tile - The tile to add.
+     * Adds the first player tile to the center.
      */
-    public void addTile(AzulTile tile) { center.add(tile); }
+    public void addFirstPlayerTile() { center.add(AzulTile.FirstPlayer); }
 
     /**
      * Adds an array of tiles to the center.
@@ -70,8 +68,8 @@ public class AzulCenter extends Component {
         }
 
         ags.setNumOfTilesPicked(numTilesRemoved);
-        System.out.println("Center after: " + Arrays.toString(center.toArray()));
-        System.out.println("Number of tiles removed: " + numTilesRemoved);
+        //System.out.println("Center after: " + Arrays.toString(center.toArray()));
+        //System.out.println("Number of tiles removed: " + numTilesRemoved);
 
         return numTilesRemoved > 0;
     }
@@ -83,10 +81,18 @@ public class AzulCenter extends Component {
      */
     public List<AzulTile> getTiles() { return new ArrayList<>(center); }
 
+    public boolean isFirstPlayer() {
+        boolean b = false;
+        for (int i = 0; i < center.size(); i++){
+            b = center.get(i) == AzulTile.FirstPlayer;
+        }
+        return b;
+    }
+
     /**
      * Checks if the center is empty.
      *
-     * @return True if the center is empty.
+     * @return True if the center is empty, false otherwise.
      */
     public boolean isEmpty() { return center.isEmpty(); }
 

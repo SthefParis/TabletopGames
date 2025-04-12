@@ -60,24 +60,24 @@ public class AzulPlayerBoard extends Component {
      * @return boolean - Returns true if the tile was placed successfully, false otherwise.
      */
     public boolean placeTileInWall(AzulGameState ags, AzulTile tile, int row, int col) {
-        System.out.println("Wall before: " + Arrays.deepToString(playerWall));
-        System.out.println("Tile placing: " + tile.getTileType());
+        //System.out.println("Wall before: " + Arrays.deepToString(playerWall));
+        //System.out.println("Tile placing: " + tile.getTileType());
 
         if (row < 0 || row >= playerWall.length) {
-            System.out.println("Row out of bounds: " + row);
+            //System.out.println("Row out of bounds: " + row);
             return false;
         }
 
         if (isPositionEmpty(row, col)) {
-            System.out.println("Tile can be placed.");
+            //System.out.println("Tile can be placed.");
             playerWall[row][col] = tile;
-            System.out.println("Wall after: " + Arrays.deepToString(playerWall));
+            //System.out.println("Wall after: " + Arrays.deepToString(playerWall));
             clearRowOnPatternLine(ags, row, col);
-            System.out.println("Row has been cleared");
+            //System.out.println("Row has been cleared");
             return true;
         }
 
-        System.out.println(tile.getTileType() + " tile cannot be placed on playerWall as tile already exists: row " + row + " col " + col);
+        //System.out.println(tile.getTileType() + " tile cannot be placed on playerWall as tile already exists: row " + row + " col " + col);
         return false;
     }
 
@@ -99,46 +99,46 @@ public class AzulPlayerBoard extends Component {
      * @return boolean - Returns true if the tile was placed successfully, false otherwise.
      */
     public boolean placeTileInPatternLine(AzulGameState ags, AzulTile tile, int row){
-        System.out.println("Temp board before: " + Arrays.deepToString(playerPatternWall));
-        System.out.println("Tile placing: " + tile.getTileType());
+        //System.out.println("Temp board before: " + Arrays.deepToString(playerPatternWall));
+        //System.out.println("Tile placing: " + tile.getTileType());
 
         if (row < 0 || row >= playerPatternWall.length){
-            System.out.println("Row out of bounds: " + row);
+            //System.out.println("Row out of bounds: " + row);
             return false;
         }
 
         if (hasBeenTiled(tile, row)) {
-            System.out.println("Tile " + tile.getTileType() + " is already in row " + row + " on the wall. Searching for new row.");
+            //System.out.println("Tile " + tile.getTileType() + " is already in row " + row + " on the wall. Searching for new row.");
 
             // Find an alternative row
             row = findValidRow(tile);
             if (row == -1) {
-                System.out.println("No valid row found. Moving tile to floor line.");
+                //System.out.println("No valid row found. Moving tile to floor line.");
                 placeTileInFloorLine(ags, tile);
                 return true;
             }
-            System.out.println("New row selected: " + row);
+            //System.out.println("New row selected: " + row);
         }
 
         if (!isRowValid(row, tile)) {
-            System.out.println("Row " + row + " contains a different tile type. Searching for a new row");
+            //System.out.println("Row " + row + " contains a different tile type. Searching for a new row");
 
             // Find alternative row
             row = findValidRow(tile);
             if (row == -1) {
-                System.out.println("No valid row found. Moving tile to floor line.");
+                //System.out.println("No valid row found. Moving tile to floor line.");
                 placeTileInFloorLine(ags, tile);
-                System.out.println("Floor line player board");
+                //System.out.println("Floor line player board");
                 return true;
             }
-            System.out.println("New row selected: " + row);
+            //System.out.println("New row selected: " + row);
         }
 
         // Place tile in the lowest available slot in the selected row
         for (int i = playerPatternWall[row].length - 1; i >= 0; i--){
             if (playerPatternWall[row][i] == null || playerPatternWall[row][i] == AzulTile.Empty){
                 playerPatternWall[row][i] = tile;
-                System.out.println("Placed " + tile.getTileType() + " in row " + row + " at position " + i);
+                //System.out.println("Placed " + tile.getTileType() + " in row " + row + " at position " + i);
                 return true;
             }
         }
@@ -185,14 +185,14 @@ public class AzulPlayerBoard extends Component {
             if (playerFloorLine[i] == null || playerFloorLine[i] == AzulTile.Empty) {
                 // If there's space, place the tile in the floor line
                 playerFloorLine[i] = tile;
-                System.out.println("Placed " + tile.getTileType() + " in floor line at position " + i);
+                //System.out.println("Placed " + tile.getTileType() + " in floor line at position " + i);
                 return;
             }
         }
 
         // If floor line is full, place the tile in the lid
         ags.updateLid(tile, 1);  // Add tile to the lid
-        System.out.println("Floor line full! Placed 1 " + tile.getTileType() + " in the lid: " + ags.getLid().keySet() + " " + ags.getLid().values());
+        //System.out.println("Floor line full! Placed 1 " + tile.getTileType() + " in the lid: " + ags.getLid().keySet() + " " + ags.getLid().values());
     }
 
     /**
@@ -244,7 +244,7 @@ public class AzulPlayerBoard extends Component {
     public AzulTile getTileAt(int row) {
         if (row >= 0 && row < playerPatternWall.length && playerPatternWall[row].length > 0) {
             // Since all tiles in this row are the same, return the tile in the first column.
-            System.out.println("Tile colour returned: " + playerPatternWall[row][0]);
+            //System.out.println("Tile colour returned: " + playerPatternWall[row][0]);
             return playerPatternWall[row][0];
         }
         return AzulTile.Empty;
@@ -269,14 +269,14 @@ public class AzulPlayerBoard extends Component {
                     rightMostTile = tile;
                     rightMostTileIndex = col1;
                     playerPatternWall[row][col1] = AzulTile.Empty;
-                    System.out.println("Row in pattern wall: " + Arrays.toString(playerPatternWall[row]));
+                    //System.out.println("Row in pattern wall: " + Arrays.toString(playerPatternWall[row]));
                     break;
                 }
             }
 
             if (rightMostTile != null || rightMostTile != AzulTile.Empty) {
                 playerWall[row][col] = rightMostTile;
-                System.out.println("Moved " + rightMostTile.getTileType() + " to wall at position " + row + ", " + col);
+                //System.out.println("Moved " + rightMostTile.getTileType() + " to wall at position " + row + ", " + col);
 
 
             }
@@ -293,7 +293,7 @@ public class AzulPlayerBoard extends Component {
         }
         // If col = -1, then row is full but tile has already been placed in wall
         else{
-            System.out.println("Adding completed row to lid as tile in wall already exists.");
+            //System.out.println("Adding completed row to lid as tile in wall already exists.");
             AzulTile tile = playerPatternWall[row][0];
             int numOfTiles = row  + 1;
             ags.updateLid(tile, numOfTiles);
@@ -301,7 +301,7 @@ public class AzulPlayerBoard extends Component {
             Arrays.fill(playerPatternWall[row], AzulTile.Empty);
         }
 
-        System.out.println("Lid: Key: " + ags.getLid().keySet() + " values: " + ags.getLid().values());
+        //System.out.println("Lid: Key: " + ags.getLid().keySet() + " values: " + ags.getLid().values());
     }
 
 
@@ -375,7 +375,7 @@ public class AzulPlayerBoard extends Component {
 
                 ags.updateLid(tile, 1);
 
-                System.out.println(tile + " tile has been removed from floorline. Added to lid: " + ags.getLid().toString());
+                //System.out.println(tile + " tile has been removed from floorline. Added to lid: " + ags.getLid().toString());
                 playerFloorLine[col] = AzulTile.Empty;
             }
         }

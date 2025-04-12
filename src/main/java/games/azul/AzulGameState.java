@@ -257,9 +257,14 @@ public class AzulGameState extends AbstractGameState {
         copy.pickedTile = pickedTile;
         copy.wall = wall;
 
-        copy.tileCounts = new HashMap<>(tileCounts);
+        copy.tileCounts = new HashMap<>();
+        // Assuming AzulTile is immutable
+        copy.tileCounts.putAll(tileCounts);
+
+
         copy.lid = new HashMap<>(lid);
         copy.playerScore = playerScore.clone();
+        copy.hasFirstPlayerTile = hasFirstPlayerTile;
 
         return copy;
     }
