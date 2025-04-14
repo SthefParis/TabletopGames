@@ -83,7 +83,7 @@ public class AzulMetrics implements IMetricsCollection {
                 numTilesPickedPerTurn.put(player, numTilesPickedPerTurn.getOrDefault(player, 0) + tilesPicked);
 
                 for (int playerId : numTilesPickedPerTurn.keySet()) {
-                    System.out.println("Player " + playerId + " picked up " + numTilesPickedPerTurn.get(playerId) + " tile(s).");
+//                    System.out.println("Player " + playerId + " picked up " + numTilesPickedPerTurn.get(playerId) + " tile(s).");
                     records.put("NumTilesPicked_P" + playerId, numTilesPickedPerTurn.get(playerId));
                 }
                 return true;
@@ -166,10 +166,64 @@ public class AzulMetrics implements IMetricsCollection {
         }
     }
 
+    public static class PatternLineCompletionRate extends AbstractMetric {
+        private final Map<Integer, Integer> totalRowsCompleted = new HashMap<>();
+        private final Map<Integer, Integer> totalTurns = new HashMap<>();
+
+        @Override
+        protected boolean _run(MetricsGameListener listener, Event e, Map<String, Object> records) {
+            if (e.type == TURN_OVER) {
+                AzulGameState ags = (AzulGameState) e.state;
+                int playerId = e.playerID;
+
+                int completedThisTurn = 0;
+
+                for (int row = 0; row < 5; row++) {
+                    if (ags.getPlayerBoard(playerId).isPatternLineRowFull(row)) {
+                        completedThisTurn++;
+                    }
+                }
+
+                totalRowsCompleted.put(playerId, totalRowsCompleted.getOrDefault(playerId, 0) + completedThisTurn);
+                totalTurns.put(playerId, totalTurns.getOrDefault(playerId, 0) + 1);
+//                System.out.printf("Player %d completed %d rows this turn%n", playerId, completedThisTurn);
+
+                return true;
+            }
+
+            if (e.type == GAME_OVER) {
+                for (int playerId : totalRowsCompleted.keySet()) {
+                    int completed = totalRowsCompleted.getOrDefault(playerId, 0);
+                    int turns = totalTurns.getOrDefault(playerId, 1);  // Avoid div by zero
+                    double rate = completed / (double) turns;
+
+//                    System.out.printf("Player %d completed %.2f rows per turn%n", playerId, rate);
+                    records.put("PatternCompletionRate_P" + playerId, rate);
+                }
+                return true;
+            }
+
+            return false;
+        }
+
+        @Override
+        public Set<IGameEvent> getDefaultEventTypes() {
+            return Set.of(TURN_OVER, Event.GameEvent.GAME_OVER);
+        }
+
+        @Override
+        public Map<String, Class<?>> getColumns(int nPlayersPerGame, Set<String> playerNames) {
+            Map<String, Class<?>> columns = new HashMap<>();
+            for (int playerId = 0; playerId < nPlayersPerGame; playerId++) {
+                columns.put("PatternCompletionRate_P" + playerId, Double.class);
+            }
+            return columns;
+        }
+    }
 
 
 
-//     public static class PatternLineCompletionRate
+
     // public static class WallCompletionRate
     // public static class Penalties
     // public static class AverageFinalScore

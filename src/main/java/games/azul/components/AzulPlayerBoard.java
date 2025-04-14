@@ -201,7 +201,7 @@ public class AzulPlayerBoard extends Component {
      * @return
      */
     public boolean canPlaceTile(int row) {
-        boolean isRowFull = isRowFull(row);
+        boolean isRowFull = isPatternLineRowFull(row);
 
         return !isRowFull;
     }
@@ -210,7 +210,11 @@ public class AzulPlayerBoard extends Component {
         return playerWall;
     }
 
-    public boolean isRowFull(int row) {
+    public AzulTile[][] getPatternLine() {
+        return playerPatternWall;
+    }
+
+    public boolean isPatternLineRowFull(int row) {
         // Check if row is full
         for (AzulTile tile: playerPatternWall[row]){
             if (tile == AzulTile.Empty || tile == null) {
@@ -244,7 +248,7 @@ public class AzulPlayerBoard extends Component {
     public AzulTile getTileAt(int row) {
         if (row >= 0 && row < playerPatternWall.length && playerPatternWall[row].length > 0) {
             // Since all tiles in this row are the same, return the tile in the first column.
-            //System.out.println("Tile colour returned: " + playerPatternWall[row][0]);
+            //zSystem.out.println("Tile colour returned: " + playerPatternWall[row][0]);
             return playerPatternWall[row][0];
         }
         return AzulTile.Empty;

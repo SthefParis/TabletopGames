@@ -3,11 +3,11 @@
   "args": [
     [
       { "class": "evaluation.metrics.GameMetrics$PlayerType" },
-      { "class": "evaluation.metrics.GameMetrics$ComputationTimes" },
       { "class": "evaluation.metrics.GameMetrics$FinalScore" },
       { "class": "games.azul.stats.AzulMetrics$FirstColourPicked" },
       { "class": "games.azul.stats.AzulMetrics$TilesPickedPerPlayer" },
-      { "class": "games.azul.stats.AzulMetrics$FactoryVsCentrePicks" }
+      { "class": "games.azul.stats.AzulMetrics$FactoryVsCentrePicks" },
+      { "class": "games.azul.stats.AzulMetrics$PatternLineCompletionRate" }
     ]
   ]
 }

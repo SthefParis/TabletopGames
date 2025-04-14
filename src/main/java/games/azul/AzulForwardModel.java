@@ -184,7 +184,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
         // Check all rows on the player's wall, and if any row is not fully filled, return false
         for (int row = 0; row < playerBoard.playerPatternWall.length; row++) {
-            if (playerBoard.isRowFull(row)) { // && !playerBoard.isRowTiled(row)
+            if (playerBoard.isPatternLineRowFull(row)) { // && !playerBoard.isRowTiled(row)
                 return false;  // The player still has unfinished tiling on this row
             }
         }
@@ -316,7 +316,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
             // Check if any row in the player's wall is complete
             for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
-                if (ags.isRowComplete(playerID, row)) {
+                if (ags.isWallRowComplete(playerID, row)) {
                     //System.out.println("Game ends: Player" + playerID + " has completed a row: " + Arrays.deepToString(ags.getPlayerBoard(playerID).playerWall));
                     endGame(ags);
                     return true;
@@ -331,7 +331,7 @@ public class AzulForwardModel extends StandardForwardModel {
         //System.out.println("Player " + playerID + " score before bonus: " + ags.getGameScore(playerID));
         // Award 2 points for any completed rows
         for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
-            if (ags.isRowComplete(playerID, row)) {
+            if (ags.isWallRowComplete(playerID, row)) {
                 ags.addPlayerPoint(playerID, 2);
                 //System.out.println("Player " + playerID + " has completed row " + row + " and gained 2 points.");
             }
@@ -339,7 +339,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
         // Award 7 points for any completed columns
         for (int col = 0; col < playerBoard.getPlayerWall().length; col++) {
-            if (ags.isColComplete(playerID, col)) {
+            if (ags.isWallColComplete(playerID, col)) {
                 ags.addPlayerPoint(playerID, 7);
                 //System.out.println("Player " + playerID + " has completed col " + col + " and gained 7 points.");
             }
@@ -377,7 +377,7 @@ public class AzulForwardModel extends StandardForwardModel {
                 AzulTile tile = playerBoard.getTileAt(row);
                 int col = wall.getTileColPositionInRow(row, tile);
 
-                if (playerBoard.isRowFull(row) && playerBoard.isPositionEmpty(row, col)) {
+                if (playerBoard.isPatternLineRowFull(row) && playerBoard.isPositionEmpty(row, col)) {
                     if (col != -1) {
                         // Automatically place the tile on the wall without an explicit action
                         boolean tilePlaced = playerBoard.placeTileInWall(ags, tile, row, col);
@@ -393,7 +393,7 @@ public class AzulForwardModel extends StandardForwardModel {
                         //System.out.println("Error: tile colour not found in player " + playerID + "'s wall.");
                     }
                 }
-                if (playerBoard.isRowFull(row) && !playerBoard.isPositionEmpty(row, col)) {
+                if (playerBoard.isPatternLineRowFull(row) && !playerBoard.isPositionEmpty(row, col)) {
                     playerBoard.clearRowOnPatternLine(ags, row, -1);
                 }
             }
@@ -490,7 +490,7 @@ public class AzulForwardModel extends StandardForwardModel {
         //System.out.println("Player board: " + Arrays.deepToString(playerBoard.playerPatternWall));
 
         for (int row = 0; row < playerBoard.playerPatternWall.length; row++) { // Iterate rows
-            if (!playerBoard.isRowFull(row)) { // Ensure the row is valid
+            if (!playerBoard.isPatternLineRowFull(row)) { // Ensure the row is valid
                 PlaceTileAction action = new PlaceTileAction(
                         playerID, ags.getTilesPicked(), ags.getNumOfTilesPicked(), row
                 );

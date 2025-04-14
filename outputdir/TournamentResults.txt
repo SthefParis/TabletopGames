@@ -1,0 +1,177 @@
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 0.00 points. RandomPlayer won 0.0% of the 1 games of the tournament. RandomPlayer won 0.0% of the 1 games it played during the tournament.
+RandomPlayer won 0.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 1.00 points. SuperOSLA won 100.0% of the 1 games of the tournament. SuperOSLA won 100.0% of the 1 games it played during the tournament.
+SuperOSLA won 100.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+SuperOSLA: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+RandomPlayer: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 1.00 points. RandomPlayer won 100.0% of the 1 games of the tournament. RandomPlayer won 100.0% of the 1 games it played during the tournament.
+RandomPlayer won 100.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 0.00 points. SuperOSLA won 0.0% of the 1 games of the tournament. SuperOSLA won 0.0% of the 1 games it played during the tournament.
+SuperOSLA won 0.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+RandomPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+SuperOSLA: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 0.00 points. RandomPlayer won 0.0% of the 1 games of the tournament. RandomPlayer won 0.0% of the 1 games it played during the tournament.
+RandomPlayer won 0.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 1.00 points. SuperOSLA won 100.0% of the 1 games of the tournament. SuperOSLA won 100.0% of the 1 games it played during the tournament.
+SuperOSLA won 100.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+SuperOSLA: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+RandomPlayer: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 0.50 points. RandomPlayer won 0.0% of the 1 games of the tournament. RandomPlayer won 0.0% of the 1 games it played during the tournament.
+RandomPlayer won 0.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 0.50 points. SuperOSLA won 0.0% of the 1 games of the tournament. SuperOSLA won 0.0% of the 1 games it played during the tournament.
+SuperOSLA won 0.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+RandomPlayer: Win rate 0.50 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+SuperOSLA: Win rate 0.50 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 1.00 points. RandomPlayer won 100.0% of the 1 games of the tournament. RandomPlayer won 100.0% of the 1 games it played during the tournament.
+RandomPlayer won 100.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 0.00 points. SuperOSLA won 0.0% of the 1 games of the tournament. SuperOSLA won 0.0% of the 1 games it played during the tournament.
+SuperOSLA won 0.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+RandomPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+SuperOSLA: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 1.00 points. RandomPlayer won 100.0% of the 1 games of the tournament. RandomPlayer won 100.0% of the 1 games it played during the tournament.
+RandomPlayer won 100.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 0.00 points. SuperOSLA won 0.0% of the 1 games of the tournament. SuperOSLA won 0.0% of the 1 games it played during the tournament.
+SuperOSLA won 0.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+RandomPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+SuperOSLA: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 1.00 points. RandomPlayer won 100.0% of the 1 games of the tournament. RandomPlayer won 100.0% of the 1 games it played during the tournament.
+RandomPlayer won 100.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 0.00 points. SuperOSLA won 0.0% of the 1 games of the tournament. SuperOSLA won 0.0% of the 1 games it played during the tournament.
+SuperOSLA won 0.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+RandomPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+SuperOSLA: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 0.00 points. RandomPlayer won 0.0% of the 1 games of the tournament. RandomPlayer won 0.0% of the 1 games it played during the tournament.
+RandomPlayer won 0.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 1.00 points. SuperOSLA won 100.0% of the 1 games of the tournament. SuperOSLA won 100.0% of the 1 games it played during the tournament.
+SuperOSLA won 100.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+SuperOSLA: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+RandomPlayer: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 0.00 points. RandomPlayer won 0.0% of the 1 games of the tournament. RandomPlayer won 0.0% of the 1 games it played during the tournament.
+RandomPlayer won 0.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 1.00 points. SuperOSLA won 100.0% of the 1 games of the tournament. SuperOSLA won 100.0% of the 1 games it played during the tournament.
+SuperOSLA won 100.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+SuperOSLA: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+RandomPlayer: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 1.00 points. RandomPlayer won 100.0% of the 1 games of the tournament. RandomPlayer won 100.0% of the 1 games it played during the tournament.
+RandomPlayer won 100.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 0.00 points. SuperOSLA won 0.0% of the 1 games of the tournament. SuperOSLA won 0.0% of the 1 games it played during the tournament.
+SuperOSLA won 0.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+RandomPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+SuperOSLA: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 1.00 points. RandomPlayer won 100.0% of the 1 games of the tournament. RandomPlayer won 100.0% of the 1 games it played during the tournament.
+RandomPlayer won 100.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 0.00 points. SuperOSLA won 0.0% of the 1 games of the tournament. SuperOSLA won 0.0% of the 1 games it played during the tournament.
+SuperOSLA won 0.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+RandomPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+SuperOSLA: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 1.00 points. RandomPlayer won 100.0% of the 1 games of the tournament. RandomPlayer won 100.0% of the 1 games it played during the tournament.
+RandomPlayer won 100.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 0.00 points. SuperOSLA won 0.0% of the 1 games of the tournament. SuperOSLA won 0.0% of the 1 games it played during the tournament.
+SuperOSLA won 0.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+RandomPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+SuperOSLA: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+RandomPlayer got 0.00 points. RandomPlayer won 0.0% of the 1 games of the tournament. RandomPlayer won 0.0% of the 1 games it played during the tournament.
+RandomPlayer won 0.0% of the 1 games against SuperOSLA.
+
+SuperOSLA got 1.00 points. SuperOSLA won 100.0% of the 1 games of the tournament. SuperOSLA won 100.0% of the 1 games it played during the tournament.
+SuperOSLA won 100.0% of the 1 games against RandomPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+SuperOSLA: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+RandomPlayer: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+MCTSPlayer got 1.00 points. MCTSPlayer won 100.0% of the 1 games of the tournament. MCTSPlayer won 50.0% of the 2 games it played during the tournament.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCTSPlayer: Win rate 0.50 +/- 0.354	Mean Ordinal 1.50 +/- 0.35
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+MCTSPlayer got 1.00 points. MCTSPlayer won 100.0% of the 1 games of the tournament. MCTSPlayer won 50.0% of the 2 games it played during the tournament.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCTSPlayer: Win rate 0.50 +/- 0.354	Mean Ordinal 1.50 +/- 0.35
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 1, GamesPerMatchup: 1
+MCTSPlayer got 1.00 points. MCTSPlayer won 100.0% of the 1 games of the tournament. MCTSPlayer won 100.0% of the 1 games it played during the tournament.
+MCTSPlayer won 100.0% of the 1 games against RandomPlayer.
+
+RandomPlayer got 0.00 points. RandomPlayer won 0.0% of the 1 games of the tournament. RandomPlayer won 0.0% of the 1 games it played during the tournament.
+RandomPlayer won 0.0% of the 1 games against MCTSPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCTSPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+RandomPlayer: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 5, GamesPerMatchup: 5
+MCTSPlayer got 5.00 points. MCTSPlayer won 100.0% of the 5 games of the tournament. MCTSPlayer won 100.0% of the 5 games it played during the tournament.
+MCTSPlayer won 100.0% of the 5 games against RandomPlayer.
+
+RandomPlayer got 0.00 points. RandomPlayer won 0.0% of the 5 games of the tournament. RandomPlayer won 0.0% of the 5 games it played during the tournament.
+RandomPlayer won 0.0% of the 5 games against MCTSPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCTSPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+RandomPlayer: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+

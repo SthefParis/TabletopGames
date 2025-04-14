@@ -61,8 +61,8 @@ public class AzulHeuristic extends TunableParameters implements IStateHeuristic 
         }
 
         double score = ags.getGameScore(playerId);
-        double completedRows = ags.getCompletedRows(gs, playerId);
-        double completedCols = ags.getCompletedCols(gs, playerId);
+        double completedRows = ags.getCompletedWallRows(gs, playerId);
+        double completedCols = ags.getCompletedWallCols(gs, playerId);
         double completedSets = ags.getCompletedColorSets(gs, playerId);
         double negativePoints = ags.getNegativePointsInRound(gs, playerId);
 
@@ -70,7 +70,7 @@ public class AzulHeuristic extends TunableParameters implements IStateHeuristic 
         double opponentDisruption = 0.0;
         for (int opponentId = 0; opponentId < gs.getNPlayers(); opponentId++) {
             if (opponentId != playerId) {
-                double opponentCompletionRisk = ags.getCompletedRows(gs, opponentId);
+                double opponentCompletionRisk = ags.getCompletedWallRows(gs, opponentId);
                 if (opponentCompletionRisk > 0.8) {
                     opponentDisruption += opponentCompletionRisk;
                 }
