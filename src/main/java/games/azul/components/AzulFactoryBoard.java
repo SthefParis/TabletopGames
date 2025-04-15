@@ -101,13 +101,13 @@ public class AzulFactoryBoard extends Component {
 
         // Randomly shuffle and select 4 tiles
         Collections.shuffle(availableTiles);
-        //System.out.println("Available tiles have been shuffled: " + availableTiles);
+//        System.out.println("Available tiles have been shuffled: " + availableTiles);
         for (int j = 0; j < 4; j++) {
-            //System.out.println("Step 1");
+//            System.out.println("Step 1");
             AzulTile drawnTile = availableTiles.get(j);
-            //System.out.println("Step 2");
+//            System.out.println("Step 2");
             factoryBoard[j] = drawnTile;
-            //System.out.println("Drawn tile: " + drawnTile + " tile in factory board: " + factoryBoard[j]);
+//            System.out.println("Drawn tile: " + drawnTile + " tile in factory board: " + factoryBoard[j]);
             tileCounts.put(drawnTile, tileCounts.get(drawnTile) - 1);
         }
 

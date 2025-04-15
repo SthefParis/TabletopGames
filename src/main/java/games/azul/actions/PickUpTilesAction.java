@@ -41,7 +41,7 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
         if (factoryId == -1) {
             // Pick from center
             //System.out.println("Player " + playerID + " picks up from center: " + tile);
-            pickUpTilesFromCenter(ags, center);
+            return pickUpTilesFromCenter(ags, center);
         } else {
             AzulFactoryBoard factory = ags.getFactory(factoryId);
             if (factory == null) {
@@ -49,10 +49,8 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
                 return false;
             }
             //System.out.println("Player " + playerID + " picks up from factory " + factoryId + ": " + tile);
-            pickUpTilesFromFactory(ags, factory);
+            return pickUpTilesFromFactory(ags, factory);
         }
-
-        return true;
     }
 
     /**
@@ -61,21 +59,16 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
      * @param ags - The game state.
      * @param fb  - The factory board.
      */
-    public void pickUpTilesFromFactory(AzulGameState ags, AzulFactoryBoard fb) {
+    public boolean pickUpTilesFromFactory(AzulGameState ags, AzulFactoryBoard fb) {
         int selectedFactory = fb.getFactoryNum();
 
-        if (selectedFactory == -1 || tile == AzulTile.Empty) {
-            //System.out.println("Invalid tile or factory selection: " + tile);
-            return;
-        }
+        if (selectedFactory == -1 || tile == AzulTile.Empty) return false;
 
         boolean tileRemoved = ags.getFactory(selectedFactory).removeTile(ags, tile);
-        ags.setPickedTile(tile);
 
-        if (!tileRemoved) {
-            //System.out.println("Failed to remove tile. Check logic.");
-            return;
-        }
+        if (!tileRemoved) return false;
+
+        ags.setPickedTile(tile);
 
         //System.out.println(tile + " tile removed from factory " + selectedFactory + ": " +Arrays.toString(fb.factoryBoard));
 
@@ -83,6 +76,7 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
         AzulTile[] remainingTiles = fb.clearTiles();
         ags.getCenter().addTiles(remainingTiles);
         //System.out.println("Remaining tiles moved to center: " + Arrays.toString(remainingTiles));
+        return true;
     }
 
     /**
@@ -91,7 +85,7 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
      * @param ags    - The game state.
      * @param center - The shared center.
      */
-    public void pickUpTilesFromCenter(AzulGameState ags, AzulCenter center) {
+    public boolean pickUpTilesFromCenter(AzulGameState ags, AzulCenter center) {
         // Check if the player is the first to pick from the center
         if (!ags.hasPickedFromCenter()) {
             // If this is the first player to pick from the center, give them the first player tile
@@ -114,19 +108,19 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
 
         // Remove the first player tile from the center, if it's still there
         boolean firstPlayerTileRemoved = center.removeTile(ags, AzulTile.FirstPlayer);
-        if (firstPlayerTileRemoved) {
+        if (firstPlayerTileRemoved) { // TESTING!!
             //System.out.println("First player tile removed from center.");
         }
 
         // Proceed with picking up the tile from the center
         boolean tileRemoved = center.removeTile(ags, tile);
-        ags.setPickedTile(tile);
         //System.out.println("Player " + playerID + " picks tile: " + tile);
 
         // If tile removal was unsuccessful, log an error
-        if (!tileRemoved) {
-            //System.out.println("Failed to remove tile from the center.");
-        }
+        if (!tileRemoved) return false;
+
+        ags.setPickedTile(tile);
+        return true;
     }
 
 

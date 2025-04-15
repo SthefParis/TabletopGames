@@ -175,3 +175,36 @@ RandomPlayer won 0.0% of the 5 games against MCTSPlayer.
 MCTSPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
 RandomPlayer: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
 
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 10, GamesPerMatchup: 10
+MCTSPlayer got 8.00 points. MCTSPlayer won 80.0% of the 10 games of the tournament. MCTSPlayer won 80.0% of the 10 games it played during the tournament.
+MCTSPlayer won 80.0% of the 10 games against RandomPlayer.
+
+RandomPlayer got 2.00 points. RandomPlayer won 20.0% of the 10 games of the tournament. RandomPlayer won 20.0% of the 10 games it played during the tournament.
+RandomPlayer won 20.0% of the 10 games against MCTSPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCTSPlayer: Win rate 0.80 +/- 0.126	Mean Ordinal 1.20 +/- 0.13
+RandomPlayer: Win rate 0.20 +/- 0.126	Mean Ordinal 1.80 +/- 0.13
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 10, GamesPerMatchup: 10
+MCTSPlayer got 10.00 points. MCTSPlayer won 100.0% of the 10 games of the tournament. MCTSPlayer won 100.0% of the 10 games it played during the tournament.
+MCTSPlayer won 100.0% of the 10 games against RandomPlayer.
+
+RandomPlayer got 0.00 points. RandomPlayer won 0.0% of the 10 games of the tournament. RandomPlayer won 0.0% of the 10 games it played during the tournament.
+RandomPlayer won 0.0% of the 10 games against MCTSPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCTSPlayer: Win rate 1.00 +/- 0.000	Mean Ordinal 1.00 +/- 0.00
+RandomPlayer: Win rate 0.00 +/- 0.000	Mean Ordinal 2.00 +/- 0.00
+
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 100, GamesPerMatchup: 100
+MCTSPlayer got 83.00 points. MCTSPlayer won 82.0% of the 100 games of the tournament. MCTSPlayer won 82.0% of the 100 games it played during the tournament.
+MCTSPlayer won 82.0% of the 100 games against RandomPlayer.
+
+RandomPlayer got 17.00 points. RandomPlayer won 16.0% of the 100 games of the tournament. RandomPlayer won 16.0% of the 100 games it played during the tournament.
+RandomPlayer won 16.0% of the 100 games against MCTSPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCTSPlayer: Win rate 0.83 +/- 0.037	Mean Ordinal 1.16 +/- 0.04
+RandomPlayer: Win rate 0.17 +/- 0.037	Mean Ordinal 1.82 +/- 0.04
+

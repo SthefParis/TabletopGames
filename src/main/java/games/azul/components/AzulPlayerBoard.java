@@ -248,7 +248,7 @@ public class AzulPlayerBoard extends Component {
     public AzulTile getTileAt(int row) {
         if (row >= 0 && row < playerPatternWall.length && playerPatternWall[row].length > 0) {
             // Since all tiles in this row are the same, return the tile in the first column.
-            //zSystem.out.println("Tile colour returned: " + playerPatternWall[row][0]);
+            //System.out.println("Tile colour returned: " + playerPatternWall[row][0]);
             return playerPatternWall[row][0];
         }
         return AzulTile.Empty;
@@ -337,7 +337,7 @@ public class AzulPlayerBoard extends Component {
 
             copy.playerPatternWall[i] = Arrays.copyOf(playerPatternWall[i], playerPatternWall[i].length);
 //            copy.playerPatternWall[i] = new AzulTile[playerPatternWall[i].length];
-//            System.arraycopy(playerPatternWall[i], 0, copy.playerPatternWall[i], 0, playerPatternWall[i].length);
+            //System.arraycopy(playerPatternWall[i], 0, copy.playerPatternWall[i], 0, playerPatternWall[i].length);
         }
 
         return copy;

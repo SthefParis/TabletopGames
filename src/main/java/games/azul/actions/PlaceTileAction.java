@@ -45,9 +45,12 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
     @Override
     public boolean execute(AbstractGameState gs) {
         AzulGameState ags = (AzulGameState) gs;
-        //System.out.println("Executing PlaceTileAction for Player "  + playerID);
-        //System.out.println("Placing on Temp Board");
-        placeTileOnTempBoard(ags);
+        if (row == -1) {
+            placeTileOnFloorLine(ags);
+        }
+        else {
+            placeTileOnTempBoard(ags);
+        }
 
         return true;
     }
@@ -82,6 +85,12 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
         } else {
             //System.out.println((numOfTiles - numOfTilesPlaced) + " tiles moved to the floor line.");
         }
+    }
+
+    public void placeTileOnFloorLine(AzulGameState ags) {
+        AzulPlayerBoard playerBoard= ags.getPlayerBoard(playerID);
+
+        playerBoard.placeTileInFloorLine(ags, tile);
     }
 
     @Override
