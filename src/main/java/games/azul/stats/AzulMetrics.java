@@ -6,6 +6,7 @@ import evaluation.metrics.AbstractMetric;
 import evaluation.metrics.Event;
 import evaluation.metrics.IMetricsCollection;
 import games.azul.AzulGameState;
+import games.azul.AzulParameters;
 import games.azul.actions.PickUpTilesAction;
 
 import java.util.*;
@@ -15,7 +16,7 @@ import static evaluation.metrics.Event.GameEvent.*;
 @SuppressWarnings("unused")
 public class AzulMetrics implements IMetricsCollection {
 
-    public static class FirstColourPicked extends AbstractMetric {
+    public static class FirstColourPickedPerRound extends AbstractMetric {
 
         private final Map<Integer, String> firstColourPerRound = new HashMap<>();
         private int currentRound = -1;
@@ -166,40 +167,57 @@ public class AzulMetrics implements IMetricsCollection {
         }
     }
 
-    public static class PatternLineCompletionRate extends AbstractMetric {
-        private final Map<Integer, Integer> totalRowsCompleted = new HashMap<>();
-        private final Map<Integer, Integer> totalTurns = new HashMap<>();
+    public static class PatternLineCompletionRatePerRound extends AbstractMetric {
+        private final Map<Integer, Map<Integer, Integer>> rowsCompletedPerRound = new HashMap<>();
+        private final Map<Integer, Map<Integer, Integer>> totalTurnsPerPlayer = new HashMap<>();
 
         @Override
         protected boolean _run(MetricsGameListener listener, Event e, Map<String, Object> records) {
+            AzulGameState ags = (AzulGameState) e.state;
+
+            if (e.type == ROUND_OVER) {
+                int round = e.state.getRoundCounter();
+
+                // For each player, calculate the completion rate for the current round
+                for (int player = 0; player < ags.getNPlayers(); player++) {
+                    int completed = rowsCompletedPerRound.getOrDefault(player, new HashMap<>()).getOrDefault(round, 0);
+                    int roundsPlayed = totalTurnsPerPlayer.getOrDefault(player, new HashMap<>()).getOrDefault(round, 0);
+
+                    double rate = roundsPlayed > 0 ? (completed / (double) roundsPlayed) : 0;
+
+//                    System.out.printf("Player %d completed pattern line with a rate of %.2f this round%n", player, rate);
+
+                    String key = String.format("P%d_R%d", player, round);
+                    records.put(key, rate);
+                }
+
+                return true;
+            }
+
             if (e.type == TURN_OVER) {
-                AzulGameState ags = (AzulGameState) e.state;
                 int playerId = e.playerID;
+                int round = e.state.getRoundCounter();
 
+                // Initialize per-round data if it's the player's first turn in this round
+                rowsCompletedPerRound.putIfAbsent(playerId, new HashMap<>());
+                totalTurnsPerPlayer.putIfAbsent(playerId, new HashMap<>());
+
+                // Count how many rows are completed this turn
                 int completedThisTurn = 0;
-
                 for (int row = 0; row < 5; row++) {
                     if (ags.getPlayerBoard(playerId).isPatternLineRowFull(row)) {
                         completedThisTurn++;
                     }
                 }
 
-                totalRowsCompleted.put(playerId, totalRowsCompleted.getOrDefault(playerId, 0) + completedThisTurn);
-                totalTurns.put(playerId, totalTurns.getOrDefault(playerId, 0) + 1);
-//                System.out.printf("Player %d completed %d rows this turn%n", playerId, completedThisTurn);
+                // Update the number of rows completed for the current round
+                Map<Integer, Integer> playerRowsCompleted = rowsCompletedPerRound.get(playerId);
+                playerRowsCompleted.put(round, playerRowsCompleted.getOrDefault(round, 0) + completedThisTurn);
 
-                return true;
-            }
+                // Increment the number of rounds for this player
+                Map<Integer, Integer> playerRounds = totalTurnsPerPlayer.get(playerId);
+                playerRounds.put(round, playerRounds.getOrDefault(round, 0) + 1);
 
-            if (e.type == GAME_OVER) {
-                for (int playerId : totalRowsCompleted.keySet()) {
-                    int completed = totalRowsCompleted.getOrDefault(playerId, 0);
-                    int turns = totalTurns.getOrDefault(playerId, 1);  // Avoid div by zero
-                    double rate = completed / (double) turns;
-
-//                    System.out.printf("Player %d completed %.2f rows per turn%n", playerId, rate);
-                    records.put("PatternCompletionRate_P" + playerId, rate);
-                }
                 return true;
             }
 
@@ -208,29 +226,112 @@ public class AzulMetrics implements IMetricsCollection {
 
         @Override
         public Set<IGameEvent> getDefaultEventTypes() {
-            return Set.of(TURN_OVER, Event.GameEvent.GAME_OVER);
+            return Set.of(TURN_OVER, ROUND_OVER);
         }
 
         @Override
         public Map<String, Class<?>> getColumns(int nPlayersPerGame, Set<String> playerNames) {
             Map<String, Class<?>> columns = new HashMap<>();
             for (int playerId = 0; playerId < nPlayersPerGame; playerId++) {
-                columns.put("PatternCompletionRate_P" + playerId, Double.class);
+                for (int r = 0; r < 10; r++) {
+                    columns.put(String.format("P%d_R%d", playerId, r), Double.class);
+                }
             }
             return columns;
         }
     }
 
+    public static class PenaltiesPerRound extends AbstractMetric {
 
+        @Override
+        protected boolean _run(MetricsGameListener listener, Event e, Map<String, Object> records) {
 
+            if (e.type == ROUND_OVER) {
+                AzulGameState ags = (AzulGameState) e.state;
+                AzulParameters params = (AzulParameters) ags.getGameParameters();
+                int round = e.state.getRoundCounter();
+//                System.out.println("Round: " + round);
 
-    // public static class WallCompletionRate
-    // public static class Penalties
-    // public static class AverageFinalScore
-    // public static class EndgameStrategy
-    // public static class TileColourFrequency
-    // public static class TilePlacement
+                for (int player = 0; player < ags.getNPlayers(); player++) {
+                    int penalty = Arrays.stream(ags.getFloorLineAsIndex(player)).sum();
 
+//                    System.out.printf("Player %d got %d penalties \n", player, penalty);
+                    String key = String.format("P%d_R%d", player, round);
+                    records.put(key, penalty);
+                }
 
+                return true;
+
+            }
+
+            return false;
+        }
+
+        @Override
+        public Set<IGameEvent> getDefaultEventTypes() {
+            return Set.of(ROUND_OVER);
+        }
+
+        @Override
+        public Map<String, Class<?>> getColumns(int nPlayersPerGame, Set<String> playerNames) {
+            Map<String, Class<?>> columns = new LinkedHashMap<>();
+            for (int p = 0; p < nPlayersPerGame; p++) {
+                for (int r = 0; r < 10; r++) {
+                    columns.put(String.format("P%d_R%d", p, r), Integer.class);
+                }
+            }
+            return columns;
+        }
+    }
+
+    public static class PatternLineUsage extends AbstractMetric {
+        HashMap<Integer, int[]> patternLineUsage = new HashMap<>();
+
+        @Override
+        protected boolean _run(MetricsGameListener listener, Event e, Map<String, Object> records) {
+            if (e.type == TURN_OVER) {
+                AzulGameState ags = (AzulGameState) e.state;
+                int player = e.playerID;
+
+                patternLineUsage.putIfAbsent(player, new int[5]);
+                int[] usage = patternLineUsage.get(player);
+
+                for (int row = 0; row < 5; row++) {
+                    if (!ags.getPlayerBoard(player).isPatternLineEmpty(row)) {
+                        usage[row]++;
+                    }
+                }
+                return true;
+            }
+
+            if (e.type == GAME_OVER) {
+                for (Map.Entry<Integer, int[]> entry : patternLineUsage.entrySet()) {
+                    int playerId = entry.getKey();
+                    int[] usage = entry.getValue();
+                    for (int row = 0; row < usage.length; row++) {
+                        records.put(String.format("P%d_Row%d_Usage", playerId, row), usage[row]);
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public Set<IGameEvent> getDefaultEventTypes() {
+            return Set.of(TURN_OVER, GAME_OVER);
+        }
+
+        @Override
+        public Map<String, Class<?>> getColumns(int nPlayersPerGame, Set<String> playerNames) {
+            Map<String, Class<?>> columns = new HashMap<>();
+            for (int player = 0; player < nPlayersPerGame; player++) {
+                for (int row = 0; row < 5; row++) {
+                    columns.put(String.format("P%d_Row%d_Usage", player, row), Integer.class);
+                }
+            }
+            return columns;
+        }
+    }
 
 }

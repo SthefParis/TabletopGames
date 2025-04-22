@@ -1,21 +1,20 @@
 package games.azul.gui;
 
-import games.azul.components.AzulCenter;
+import games.azul.components.AzulCentre;
 import games.azul.tiles.AzulTile;
 import gui.views.ComponentView;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Visual component responsible for rendering the tiles in the center.
+ * Visual component responsible for rendering the tiles in the centre.
  * This component draws a grid of colored squares representing Azul tiles.
  */
-public class AzulCenterView extends ComponentView {
+public class AzulCentreView extends ComponentView {
 
-    private final AzulCenter center;
+    private final AzulCentre center;
 
     private final int tileSize;
     private final int spacing;
@@ -26,13 +25,13 @@ public class AzulCenterView extends ComponentView {
 
 
     /**
-     * Constructs the view for displaying the Azul center tiles.
+     * Constructs the view for displaying the Azul centre tiles.
      *
-     * @param center - The AzulCenter model containing the tiles.
+     * @param center - The AzulCentre model containing the tiles.
      * @param tileSize - The size of each tile (width and height).
      * @param tilesPerRow - The maximum number of tiles per row in the layout.
      */
-    public AzulCenterView(AzulCenter center, int tileSize, int spacing, int tilesPerRow) {
+    public AzulCentreView(AzulCentre center, int tileSize, int spacing, int tilesPerRow) {
         super(center, 0, 0);
         this.center = center;
         this.tileSize = tileSize;

@@ -5,7 +5,7 @@ import core.AbstractParameters;
 import core.components.Component;
 import core.interfaces.IGamePhase;
 import games.GameType;
-import games.azul.components.AzulCenter;
+import games.azul.components.AzulCentre;
 import games.azul.components.AzulFactoryBoard;
 import games.azul.components.AzulPlayerBoard;
 import games.azul.components.AzulWallPattern;
@@ -27,13 +27,13 @@ public class AzulGameState extends AbstractGameState {
         FactoryOffer,
         PlaceTile,
         WallTiling,
-        PrepNextRnd
+        PrepNxtRnd
     }
 
     List<AzulFactoryBoard> factoryBoards;
     List<AzulPlayerBoard> playerBoards;
-    AzulCenter center;
-    HashMap<AzulTile, Integer> tileCounts;
+    AzulCentre center;
+    HashMap<AzulTile, Integer> tileBag;
     HashMap<AzulTile, Integer> lid;
     AzulWallPattern wall;
 
@@ -61,19 +61,36 @@ public class AzulGameState extends AbstractGameState {
     public void setNumOfTilesPicked(int numOfTilesPicked) { this.numOfTilesPicked = numOfTilesPicked; }
     public int getNumOfTilesPicked() { return numOfTilesPicked; }
 
-    public AzulCenter getCenter(){ return center; }
+    public AzulCentre getCenter(){ return center; }
 
     public AzulTile[][] getWallPattern() { return wall.patternPlayerBoard; }
     public AzulWallPattern getWall() { return wall; }
     public void setWall(AzulWallPattern wall) { this.wall = wall; }
     public AzulTile getTileInWall(int row, int col) { return wall.patternPlayerBoard[row][col]; }
 
-    public void updateTileCount(AzulTile tile, int count) {
-        tileCounts.put(tile, tileCounts.getOrDefault(tile, 0) + count);
+    public int[] getFloorLineAsIndex(int playerId) {
+        AzulParameters params = (AzulParameters) getGameParameters();
+        AzulTile[] floorLine = getPlayerBoard(playerId).playerFloorLine;
+        int[] penaltiesForPlayer = new int[7];
+        int[] penalties = params.floorPenalties;
+
+        for (int i = 0; i < floorLine.length; i++) {
+            if (floorLine[i] == null && floorLine[i] == AzulTile.Empty) {
+                return penaltiesForPlayer;
+            }
+
+            penaltiesForPlayer[i] = penalties[i];
+        }
+
+        return penaltiesForPlayer;
     }
-    public void updateAllTileCounts(HashMap<AzulTile, Integer> tileCounts) { this.tileCounts = tileCounts; }
-    public int getTileCount(AzulTile tile) { return tileCounts.getOrDefault(tile, 0); }
-    public HashMap<AzulTile, Integer> getAllTileCounts() { return tileCounts; }
+
+    public void updateTileCount(AzulTile tile, int count) {
+        tileBag.put(tile, tileBag.getOrDefault(tile, 0) + count);
+    }
+    public void updateAllTileCounts(HashMap<AzulTile, Integer> tileCounts) { this.tileBag = tileCounts; }
+    public int getTileCount(AzulTile tile) { return tileBag.getOrDefault(tile, 0); }
+    public HashMap<AzulTile, Integer> getAllTileCounts() { return tileBag; }
 
     public void updateLid(AzulTile tile, int count) {
         lid.put(tile, lid.getOrDefault(tile, 0) + count);
@@ -130,6 +147,10 @@ public class AzulGameState extends AbstractGameState {
             }
         }
         return completedCols;
+    }
+
+    public boolean isEmpty() {
+        return true;
     }
 
 //    public boolean isPatternLineRowComplete(int playerId, int row) {
@@ -264,15 +285,15 @@ public class AzulGameState extends AbstractGameState {
             copy.playerBoards.add((AzulPlayerBoard) pb.copy());
         }
 
-        copy.center = (AzulCenter) center.copy();
+        copy.center = (AzulCentre) center.copy();
 
         copy.numOfTilesPicked = numOfTilesPicked;
         copy.pickedTile = pickedTile;
         copy.wall = wall;
 
-        copy.tileCounts = new HashMap<>();
+        copy.tileBag = new HashMap<>();
         // Assuming AzulTile is immutable
-        copy.tileCounts.putAll(tileCounts);
+        copy.tileBag.putAll(tileBag);
 
 
         copy.lid = new HashMap<>(lid);
@@ -312,7 +333,7 @@ public class AzulGameState extends AbstractGameState {
                 Objects.equals(pickedTile, that.pickedTile) &&
                 Objects.equals(factoryBoards, that.factoryBoards) &&
                 Objects.equals(center, that.center) &&
-                Objects.equals(tileCounts, that.tileCounts) &&
+                Objects.equals(tileBag, that.tileBag) &&
                 Objects.equals(lid, that.lid) &&
                 Objects.equals(wall, that.wall) &&
                 Arrays.equals(playerScore, that.playerScore);
@@ -321,7 +342,7 @@ public class AzulGameState extends AbstractGameState {
     @Override
     public int hashCode() {
         int result = Objects.hash(numOfTilesPicked, hasPickedFromCenter, pickedTile,
-                factoryBoards, playerBoards, center, tileCounts, lid, wall);
+                factoryBoards, playerBoards, center, tileBag, lid, wall);
         result = 31 * result + Arrays.hashCode(playerScore);
         return result;
     }

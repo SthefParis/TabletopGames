@@ -4,22 +4,20 @@ import core.AbstractGameState;
 import core.actions.AbstractAction;
 import core.interfaces.IPrintable;
 import games.azul.AzulGameState;
-import games.azul.components.AzulCenter;
+import games.azul.components.AzulCentre;
 import games.azul.components.AzulFactoryBoard;
 import games.azul.tiles.AzulTile;
 
-import java.awt.*;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Action representing picking up tiles from a factory or the center.
+ * Action representing picking up tiles from a factory or the centre.
  */
 public class PickUpTilesAction extends AbstractAction implements IPrintable {
 
-    protected final int playerID;
-    protected final AzulTile tile;
-    protected final int factoryId;
+    private final int playerID;
+    private final AzulTile tile;
+    private final int factoryId;
 
     public PickUpTilesAction(int playerID, AzulTile tile, int factoryId) {
         this.playerID = playerID;
@@ -28,7 +26,7 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
     }
 
     /**
-     * Executes the action of picking up tiles from either a factory or the center.
+     * Executes the action of picking up tiles from either a factory or the centre.
      *
      * @param gs - The current game state.
      * @return true if the action was successful, false otherwise.
@@ -36,11 +34,11 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
     @Override
     public boolean execute(AbstractGameState gs) {
         AzulGameState ags = (AzulGameState) gs;
-        AzulCenter center = ags.getCenter();
+        AzulCentre center = ags.getCenter();
 
         if (factoryId == -1) {
-            // Pick from center
-            //System.out.println("Player " + playerID + " picks up from center: " + tile);
+            // Pick from centre
+            //System.out.println("Player " + playerID + " picks up from centre: " + tile);
             return pickUpTilesFromCenter(ags, center);
         } else {
             AzulFactoryBoard factory = ags.getFactory(factoryId);
@@ -62,7 +60,7 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
     public boolean pickUpTilesFromFactory(AzulGameState ags, AzulFactoryBoard fb) {
         int selectedFactory = fb.getFactoryNum();
 
-        if (selectedFactory == -1 || tile == AzulTile.Empty) return false;
+        if (selectedFactory == -1 || tile == AzulTile.Empty || tile == null) return false;
 
         boolean tileRemoved = ags.getFactory(selectedFactory).removeTile(ags, tile);
 
@@ -72,23 +70,23 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
 
         //System.out.println(tile + " tile removed from factory " + selectedFactory + ": " +Arrays.toString(fb.factoryBoard));
 
-        // Move remaining tiles to center
+        // Move remaining tiles to centre
         AzulTile[] remainingTiles = fb.clearTiles();
         ags.getCenter().addTiles(remainingTiles);
-        //System.out.println("Remaining tiles moved to center: " + Arrays.toString(remainingTiles));
+        //System.out.println("Remaining tiles moved to centre: " + Arrays.toString(remainingTiles));
         return true;
     }
 
     /**
-     * Handles the logic for picking up tiles from the center.
+     * Handles the logic for picking up tiles from the centre.
      *
      * @param ags    - The game state.
-     * @param center - The shared center.
+     * @param center - The shared centre.
      */
-    public boolean pickUpTilesFromCenter(AzulGameState ags, AzulCenter center) {
-        // Check if the player is the first to pick from the center
+    public boolean pickUpTilesFromCenter(AzulGameState ags, AzulCentre center) {
+        // Check if the player is the first to pick from the centre
         if (!ags.hasPickedFromCenter()) {
-            // If this is the first player to pick from the center, give them the first player tile
+            // If this is the first player to pick from the centre, give them the first player tile
             //System.out.println("Giving first player tile to player " + playerID);
 
             AzulTile[] floorLine = ags.getPlayerBoard(playerID).playerFloorLine;
@@ -106,13 +104,13 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
             ags.setHasPickedFromCenter(true);
         }
 
-        // Remove the first player tile from the center, if it's still there
+        // Remove the first player tile from the centre, if it's still there
         boolean firstPlayerTileRemoved = center.removeTile(ags, AzulTile.FirstPlayer);
         if (firstPlayerTileRemoved) { // TESTING!!
-            //System.out.println("First player tile removed from center.");
+            //System.out.println("First player tile removed from centre.");
         }
 
-        // Proceed with picking up the tile from the center
+        // Proceed with picking up the tile from the centre
         boolean tileRemoved = center.removeTile(ags, tile);
         //System.out.println("Player " + playerID + " picks tile: " + tile);
 
@@ -136,7 +134,7 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
     /**
      * Determines if the tile was picked up from a factory.
      *
-     * @return True if the tile was picked from a factory, false if picked from the center.
+     * @return True if the tile was picked from a factory, false if picked from the centre.
      */
     public boolean isFromFactory() {
         return factoryId != -1;
@@ -180,7 +178,7 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
     @Override
     public String getString(AbstractGameState gameState) {
         return (factoryId == -1)
-                ? String.format("Picked up %s tiles from center.", tile.getTileType())
+                ? String.format("Picked up %s tiles from centre.", tile.getTileType())
                 : String.format("Picked up %s tiles from factory %d.", tile.getTileType(), factoryId);
     }
 }

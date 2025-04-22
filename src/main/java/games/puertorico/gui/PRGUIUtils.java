@@ -252,7 +252,7 @@ public class PRGUIUtils {
             if (i != nLines-1 || nSpacesLastRow == nSpacesOnLine) {
                 drawSpaces(g, ship, outline, nSpacesOnLine, startX, startY, i, crop, nFilled);
             } else {
-                // Last row has fewer spaces, first calculate offset in order to center spaces
+                // Last row has fewer spaces, first calculate offset in order to centre spaces
                 startX = x + width/2 - nSpacesLastRow*shipSpaceSize/2;
                 drawSpaces(g, ship, outline, nSpacesLastRow, startX, startY, i, crop, nFilled);
             }

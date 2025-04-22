@@ -98,7 +98,7 @@ public class ColtExpressGUIManager extends AbstractGUIManager {
                 playerViews.setOpaque(false);
                 playerViews.setLayout(new BoxLayout(playerViews, BoxLayout.Y_AXIS));
 
-                // Planned actions + train + rounds go in the center
+                // Planned actions + train + rounds go in the centre
                 JPanel centerArea = new JPanel();
                 centerArea.setOpaque(false);
                 centerArea.setLayout(new BoxLayout(centerArea, BoxLayout.Y_AXIS));
@@ -264,7 +264,7 @@ public class ColtExpressGUIManager extends AbstractGUIManager {
     }
 
     private String getRuleText() {
-        String rules = "<html><center><h1>Colt Express</h1></center><br/><hr><br/>";
+        String rules = "<html><centre><h1>Colt Express</h1></centre><br/><hr><br/>";
         rules += "<p>You are part of a group of bandits aiming to become the richest in the Old West. Your goal is to earn" +
                 " as much money as possible by collecting loot bags (of variable worth), jewels (worth $500 each) and " +
                 "stronghold boxes (worth $1000) each.</p><br/>";

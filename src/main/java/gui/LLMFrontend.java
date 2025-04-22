@@ -593,7 +593,7 @@ public class LLMFrontend extends GUI {
         gameOptionFullPanel.add(spFeedback);
         gameOptionFullPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         gameOptionFullPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        // Align button center
+        // Align button centre
         gameOptionFullPanel.add(submitFeedback);
 
 

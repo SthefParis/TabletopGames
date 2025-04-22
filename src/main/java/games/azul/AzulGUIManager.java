@@ -3,7 +3,7 @@ package games.azul;
 import core.AbstractGameState;
 import core.AbstractPlayer;
 import core.Game;
-import games.azul.gui.AzulCenterView;
+import games.azul.gui.AzulCentreView;
 import games.azul.gui.AzulFactoryBoardView;
 import games.azul.gui.AzulPlayerBoardView;
 import gui.AbstractGUIManager;
@@ -47,10 +47,14 @@ public class AzulGUIManager extends AbstractGUIManager {
     // List of Factory Boards
     private List<AzulFactoryBoardView> factoryBoards;
     private List<AzulPlayerBoardView> playerBoards;
-    private AzulCenterView centerView;
+    private AzulCentreView centerView;
 
     // Current active player
     private int activePlayer = -1;
+
+    // Stores the player tabs
+    private JTabbedPane playerBoardTabs;
+    private List<JPanel> playerPanels = new ArrayList<>();
 
     public AzulGUIManager(GamePanel parent, Game game, ActionController ac, Set<Integer> human) {
         super(parent, game, ac, human);
@@ -96,7 +100,7 @@ public class AzulGUIManager extends AbstractGUIManager {
         // Main game area that will hold all game views
         factoryBoards = new ArrayList<>();
         playerBoards = new ArrayList<>();
-        centerView = new AzulCenterView(ags.center, 40, 10, 5);
+        centerView = new AzulCentreView(ags.center, 40, 10, 4);
 
         centerView.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.BLACK, 2), "Center"));
@@ -106,8 +110,8 @@ public class AzulGUIManager extends AbstractGUIManager {
         mainGameArea.setOpaque(false);
 
         // Tabbed pane for player boards
-        JTabbedPane playerBoardTabs = new JTabbedPane();
-        playerBoardTabs.setPreferredSize(new Dimension(10, playerAreaHeight));
+        playerBoardTabs = new JTabbedPane();
+        playerBoardTabs.setPreferredSize(new Dimension(playerAreaWidth, playerAreaHeight));
 
         for (int i = 0; i < nPlayers; i++) {
             AzulPlayerBoardView playerBoard = new AzulPlayerBoardView(ags.getPlayerBoard(i), ags);
@@ -129,6 +133,7 @@ public class AzulGUIManager extends AbstractGUIManager {
 
             // Wrap player board in a JPanel for spacing
             JPanel playerPanel = new JPanel();
+            playerPanels.add(playerPanel);
             playerPanel.setPreferredSize(new Dimension(playerAreaWidth, playerAreaHeight));
             playerPanel.setLayout(new BorderLayout());
 //            playerPanel.setOpaque(false);
@@ -206,8 +211,10 @@ public class AzulGUIManager extends AbstractGUIManager {
         if (gs == null) return;
         AzulGameState ags = (AzulGameState) gs;
 
-        if (gs.getCurrentPlayer() != activePlayer) {
+        int newActivePlayer = gs.getCurrentPlayer();
+        if (newActivePlayer != activePlayer) {
             activePlayer = gs.getCurrentPlayer();
+            playerBoardTabs.setSelectedIndex(activePlayer);
         }
 
        // Update factory boards
@@ -215,26 +222,41 @@ public class AzulGUIManager extends AbstractGUIManager {
             factoryBoards.get(i).updateComponent(ags.getFactory(i));
         }
 
-        // Update player boards
-//        for (int j=0; j<playerBoards.size(); j++){
-//            playerBoards.get(j).updateComponent(ags.getPlayerBoard(j));
-//        }
+        // Update borders to reflect active player
+        for (int i = 0; i < playerPanels.size(); i++) {
+            JPanel panel = playerPanels.get(i);
+
+            Border lineBorder = BorderFactory.createLineBorder(
+                    i == activePlayer ? Color.ORANGE : Color.BLACK,
+                    i == activePlayer ? 3 : 1
+            );
+            String[] split = game.getPlayers().get(i).getClass().toString().split("\\.");
+            String agentName = split[split.length - 1];
+            TitledBorder title = BorderFactory.createTitledBorder(
+                    lineBorder,
+                    "Player " + i + " [" + agentName + "]",
+                    TitledBorder.CENTER,
+                    TitledBorder.BELOW_BOTTOM
+            );
+            // Apply border to the internal AzulPlayerBoardView
+            playerBoards.get(i).setBorder(title);
+        }
 
         parent.revalidate();
         parent.repaint();
     }
 
     private String getRuleText() {
-        String rules = "<html><center><h1>Azul</h1></center><br/><hr><br/>";
+        String rules = "<html><centre><h1>Azul</h1></centre><br/><hr><br/>";
         rules += "<p>Azul is a competitive tile-drafting game where players take turns selecting and placing colorful tiles to decorate their personal board. The goal is to create beautiful patterns while maximizing points and outmaneuvering opponents. The player with the most points at the end of the game wins.</p><br/>";
 
         rules += "<p><b>Game Setup:</b></p>";
         rules += "<ul><li>Each player receives a personal board.</li>";
-        rules += "<li>Factory displays (tile supply piles) are placed in the center.</li>";
+        rules += "<li>Factory displays (tile supply piles) are placed in the centre.</li>";
         rules += "<li>Tiles are randomly drawn from a bag to fill the factories.</li></ul><br/>";
 
         rules += "<p><b>Gameplay:</b></p>";
-        rules += "<ul><li><b>Tile Selection:</b> On your turn, pick all tiles of one color from a factory display or the center. Remaining tiles will be moved to the center.</li>";
+        rules += "<ul><li><b>Tile Selection:</b> On your turn, pick all tiles of one color from a factory display or the centre. Remaining tiles will be moved to the centre.</li>";
         rules += "<li><b>Pattern Line Placement:</b> Place chosen tiles in a row on your personal board. Rows must be completely filled before moving tiles to the playerWall.</li>";
         rules += "<li><b>Wall Tiling:</b> At the end of the round, one tile from each completed row moves to the playerWall, scoring points based on adjacency.</li>";
         rules += "<li><b>Penalties:</b> Unused tiles fall to the floor line, deducting points.</li></ul><br/>";

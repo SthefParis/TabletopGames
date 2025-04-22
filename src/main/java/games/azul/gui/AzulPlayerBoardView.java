@@ -113,6 +113,7 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
 
     // Draws Wall
     private void drawPlayerBoard(Graphics2D g, AzulPlayerBoard playerBoard, int x, int y) {
+
         // Iterate over the playerWall to draw each tile
         for (int i = 0; i < playerBoard.playerWall.length; i++) {
             for (int j = 0; j < playerBoard.playerWall[i].length; j++) {
@@ -122,7 +123,7 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
                 AzulTile tile = playerBoard.playerWall[i][j];
 //                System.out.println("Tile in player wall: " + tile.getTileType());
 
-                drawCell(g, tile, xC, yC);
+                drawCell(g, tile, xC, yC, true, i, j);
             }
         }
     }
@@ -145,7 +146,7 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
                 AzulTile tile = playerBoard.playerPatternWall[i][j];
 
                 // Draw background color for the tile (empty slots should be grey)
-                drawCell(g, tile, xC, yC);
+                drawCell(g, tile, xC, yC, false, -1, -1);
 
                 // Save rect position
                 int idx = i * playerBoard.playerPatternWall.length + j;
@@ -167,14 +168,29 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
             AzulTile tile = azulPlayerBoard.playerFloorLine[i];
 
             // Determine tile color (empty slots should be grey)
-            drawCell(g, tile, startX, y);
+            drawCell(g, tile, startX, y, false, -1, -1);
 
-            // Draw floor penalty points inside each tile
+            // Draw floor penalty points inside each tile with a white outline
             g.setFont(new Font("Arial", Font.BOLD, defaultFontSize));
+            String text = String.valueOf(floorPenalties[i]);
+
+            FontMetrics metrics = g.getFontMetrics();
+            int textWidth = metrics.stringWidth(text);
+            int textHeight = metrics.getAscent();
+            int textX = startX + (tileSize - textWidth) / 2;
+            int textY = y + (tileSize + textHeight) / 2 - 3;
+
+            // White outline
+            g.setColor(Color.WHITE);
+            g.drawString(text, textX - 1, textY);
+            g.drawString(text, textX + 1, textY);
+            g.drawString(text, textX, textY - 1);
+            g.drawString(text, textX, textY + 1);
+
+            // Actual text in black
             g.setColor(Color.BLACK);
-            int textX = startX + tileSize / 3;
-            int textY = y + tileSize / 2;
-            g.drawString(String.valueOf(floorPenalties[i]), textX, textY);
+            g.drawString(text, textX, textY);
+
         }
     }
 
@@ -245,8 +261,23 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
         };
     }
 
-    private void drawCell(Graphics2D g, AzulTile tile, int xC, int yC) {
-        Color tileColor = (tile != null && tile != AzulTile.Empty) ? getTileColor(tile) : Color.LIGHT_GRAY;
+    private void drawCell(Graphics2D g, AzulTile tile, int xC, int yC, boolean isWallCell, int row, int col) {
+        Color tileColor;
+
+        AzulTile[] tileOrder = {
+                AzulTile.Blue, AzulTile.Orange, AzulTile.Red, AzulTile.Black, AzulTile.White
+        };
+
+        if (tile != null && tile != AzulTile.Empty) {
+            tileColor = getTileColor(tile);
+        } else if (isWallCell) {
+            int index = (col - row + 5) % 5;  // Proper Azul pattern
+            Color baseColor = tileOrder[index].getColor();
+            tileColor = new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 50); // semi-transparent
+        } else {
+            tileColor = Color.LIGHT_GRAY;
+        }
+
         g.setColor(tileColor);
         g.fillRect(xC, yC, tileSize, tileSize);
 

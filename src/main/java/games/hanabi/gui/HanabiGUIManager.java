@@ -99,7 +99,7 @@ public class HanabiGUIManager extends AbstractGUIManager {
                     mainGameArea.add(sides[i], locations[i]);
                 }
 
-                // Discard and draw piles go in the center
+                // Discard and draw piles go in the centre
                 JPanel centerArea = new JPanel();
                 centerArea.setLayout(new BoxLayout(centerArea, BoxLayout.Y_AXIS));
 //                discardPile = new HanabiDeckView(hbgs, -1, hbgs.getDiscardDeck(), true, hbp.getDataPath(), new Rectangle(0, 0, hanabiCardWidth, hanabiCardHeight));

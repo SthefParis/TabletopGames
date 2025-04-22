@@ -223,7 +223,7 @@ public class BlackjackGUIManager extends AbstractGUIManager {
     }
 
     private String getRuleText() {
-        String rules = "<html><center><h1>Blackjack</h1></center><br/><hr><br/>";
+        String rules = "<html><centre><h1>Blackjack</h1></centre><br/><hr><br/>";
         rules += "<p>Players are each dealt 2 cards face up. The dealer is also dealt 2 cards, one up (exposed) and one down (hidden). " +
                 "The value of number cards 2 through 10 is their pip value (2 through 10). " +
                 "Face cards (jack, queen, and king) are all worth 10. " +

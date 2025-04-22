@@ -134,7 +134,7 @@ public class DBGUIManager extends AbstractGUIManager {
     }
 
     private String getRuleText() {
-        String rules = "<html><center><h1>Dots & Boxes</h1></center><br/><hr><br/>";
+        String rules = "<html><centre><h1>Dots & Boxes</h1></centre><br/><hr><br/>";
         rules += "<p>Play happens on a grid with dots in the corners of all cells. Players alternate drawing lines between the dots.</p><br/>";
         rules += "<p>Whenever a grid cell is completely enclosed, the player who drew the last edge gets 1 point. If a line drawn closes X cells at the same time, then the player gets X points. If any cell is closed, the same player gets to draw another line.</p><br/>";
         rules += "<p>WIN: The player with most boxes completed (points) wins.</p>";

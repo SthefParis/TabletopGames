@@ -40,7 +40,7 @@ public class AzulParameters extends AbstractParameters {
     int adjacencyBasePoints = 1;
 
     // Penalty parameters
-    int[] floorPenalties = {1, 1, 2, 2, 2, 3, 3};
+    public int[] floorPenalties = {1, 1, 2, 2, 2, 3, 3};
 
     public int getBoardSize() { return playerBoardSize; }
     public int getNTilesPerFactory() { return nTilesperFactory; }

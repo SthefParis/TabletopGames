@@ -1214,7 +1214,7 @@ public class DescentForwardModel extends StandardForwardModel {
             }
         }
 
-        // First tile will be in the center, board could expand in more directions
+        // First tile will be in the centre, board could expand in more directions
         width *= 2;
         height *= 2;
 

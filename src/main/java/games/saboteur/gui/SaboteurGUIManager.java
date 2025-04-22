@@ -264,7 +264,7 @@ public class SaboteurGUIManager extends AbstractGUIManager {
 
 
     private String getRuleText() {
-        String rules = "<html><center><h1>Saboteur</h1></center><br/><hr><br/>";
+        String rules = "<html><centre><h1>Saboteur</h1></centre><br/><hr><br/>";
         rules += "<p>Rules.</p><br/>";
         rules += "<hr><p><b>INTERFACE: </b> Find actions available at any time at the bottom of the screen. </p>";
         rules += "</html>";

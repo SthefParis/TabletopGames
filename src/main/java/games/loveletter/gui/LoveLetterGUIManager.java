@@ -157,7 +157,7 @@ public class LoveLetterGUIManager extends AbstractGUIManager {
                     mainGameArea.add(sides[i], locations[i]);
                 }
 
-                // Discard and draw piles go in the center
+                // Discard and draw piles go in the centre
                 JPanel centerArea = new JPanel();
                 centerArea.setOpaque(false);
                 centerArea.setLayout(new BoxLayout(centerArea, BoxLayout.Y_AXIS));
@@ -340,7 +340,7 @@ public class LoveLetterGUIManager extends AbstractGUIManager {
     }
 
     private String getRuleText() {
-        String rules = "<html><center><h1>Love Letter</h1></center><br/><hr><br/>";
+        String rules = "<html><centre><h1>Love Letter</h1></centre><br/><hr><br/>";
         rules += "<p>You try to earn the favour of the princess and get your love letter delivered to her. The closer you are (the higher your card number) at the end, the better. The closest player, or the only one left in the game, is the winner of the round. Win most rounds to win the game.</p><br/>";
         rules += "<p>On your turn, you draw a card to have 2 in hand, and then play one of the cards, discarding it and executing its effect.</p>";
         rules += "<p><b>Types of cards</b>: " +

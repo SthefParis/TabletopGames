@@ -18,7 +18,7 @@ public class ResBoardView extends JPanel {
         int imgWidth = backgroundImage.getWidth(this);
         int imgHeight = backgroundImage.getHeight(this);
 
-        // Calculate the position to center the image
+        // Calculate the position to centre the image
         int x = (getWidth() - imgWidth) / 2;
         int y = (getHeight() - imgHeight) / 2;
 

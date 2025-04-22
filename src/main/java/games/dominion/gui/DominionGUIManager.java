@@ -83,7 +83,7 @@ public class DominionGUIManager extends AbstractGUIManager {
                 mainGameArea.add(sides[i], locations[i]);
             }
 
-            // Discard and draw piles go in the center
+            // Discard and draw piles go in the centre
             JPanel centerArea = new JPanel();
             centerArea.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
             trashPile = new DominionDeckView(-1, state.getDeck(DominionConstants.DeckType.TRASH, -1),

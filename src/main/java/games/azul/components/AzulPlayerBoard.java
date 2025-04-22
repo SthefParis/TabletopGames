@@ -99,39 +99,27 @@ public class AzulPlayerBoard extends Component {
      * @return boolean - Returns true if the tile was placed successfully, false otherwise.
      */
     public boolean placeTileInPatternLine(AzulGameState ags, AzulTile tile, int row){
-        //System.out.println("Temp board before: " + Arrays.deepToString(playerPatternWall));
-        //System.out.println("Tile placing: " + tile.getTileType());
 
         if (row < 0 || row >= playerPatternWall.length){
-            //System.out.println("Row out of bounds: " + row);
             return false;
         }
 
         if (hasBeenTiled(tile, row)) {
-            //System.out.println("Tile " + tile.getTileType() + " is already in row " + row + " on the wall. Searching for new row.");
-
             // Find an alternative row
             row = findValidRow(tile);
             if (row == -1) {
-                //System.out.println("No valid row found. Moving tile to floor line.");
-                placeTileInFloorLine(ags, tile);
-                return true;
+//                placeTileInFloorLine(ags, tile);
+                return false;
             }
-            //System.out.println("New row selected: " + row);
         }
 
         if (!isRowValid(row, tile)) {
-            //System.out.println("Row " + row + " contains a different tile type. Searching for a new row");
-
             // Find alternative row
             row = findValidRow(tile);
             if (row == -1) {
-                //System.out.println("No valid row found. Moving tile to floor line.");
-                placeTileInFloorLine(ags, tile);
-                //System.out.println("Floor line player board");
-                return true;
+//                placeTileInFloorLine(ags, tile);
+                return false;
             }
-            //System.out.println("New row selected: " + row);
         }
 
         // Place tile in the lowest available slot in the selected row
@@ -212,6 +200,16 @@ public class AzulPlayerBoard extends Component {
 
     public AzulTile[][] getPatternLine() {
         return playerPatternWall;
+    }
+
+    public boolean isPatternLineEmpty(int row) {
+        for (int i = 0; i < playerPatternWall[row].length; i++) {
+            if (playerPatternWall[row][i] != null && playerPatternWall[row][i] != AzulTile.Empty) {
+                return false;
+
+            }
+        }
+        return true;
     }
 
     public boolean isPatternLineRowFull(int row) {

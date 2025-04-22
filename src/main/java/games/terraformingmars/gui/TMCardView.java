@@ -936,7 +936,7 @@ public class TMCardView extends JComponent {
     }
 
     private void drawAction(Graphics2D g, TMAction a, int x, int y, int size) {
-        // x is center
+        // x is centre
 
         // Draw action arrow
         drawImage(g, actionArrow, x - defaultItemSize/4, y, defaultItemSize/2, size);

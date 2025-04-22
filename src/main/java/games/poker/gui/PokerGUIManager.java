@@ -149,7 +149,7 @@ public class PokerGUIManager extends AbstractGUIManager {
                     mainGameArea.add(sides[i], locations[i]);
                 }
 
-                // Discard and draw piles go in the center
+                // Discard and draw piles go in the centre
                 JPanel centerArea = new JPanel();
                 centerArea.setOpaque(false);
                 centerArea.setLayout(new BoxLayout(centerArea, BoxLayout.Y_AXIS));
@@ -349,7 +349,7 @@ public class PokerGUIManager extends AbstractGUIManager {
 
 
     private String getRuleText() {
-        String rules = "<html><center><h1>Poker</h1></center><br/><hr><br/>";
+        String rules = "<html><centre><h1>Poker</h1></centre><br/><hr><br/>";
         rules += "<p>Coming soon ...</p>";
 
 

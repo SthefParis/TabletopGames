@@ -43,14 +43,14 @@ public enum AzulTile {
     public String getColourAsString(Color color) {
         String colorAsString = "";
 
-        if (color == Color.WHITE) colorAsString = "White";
-        if (color == Color.BLACK) colorAsString = "Black";
-        if (color == Color.RED) colorAsString = "Red";
-        if (color == Color.ORANGE) colorAsString = "Orange";
-        if (color == Color.BLUE) colorAsString = "Blue";
-        if (color == Color.MAGENTA) colorAsString = "Magenta";
-
-
-        return colorAsString;
+        return switch (color.getRGB()) {
+            case 0xFFFFFFFF -> "White";   // Color.WHITE
+            case 0xFF000000 -> "Black";   // Color.BLACK
+            case 0xFFFF0000 -> "Red";     // Color.RED
+            case 0xFFFFA500 -> "Orange";  // Color.ORANGE
+            case 0xFF0000FF -> "Blue";    // Color.BLUE
+            case 0xFFFF00FF -> "Magenta"; // Color.MAGENTA
+            default -> "";
+        };
     }
 }

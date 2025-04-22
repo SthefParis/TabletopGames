@@ -280,7 +280,7 @@ public class HeartsGUIManager extends AbstractGUIManager {
     }
 
     private String getRuleText() {
-        String rules = "<html><center><h1>Hearts</h1></center><br/><hr><br/>";
+        String rules = "<html><centre><h1>Hearts</h1></centre><br/><hr><br/>";
         rules = "<html><p>Hearts is a trick taking game where the objective is to avoid scoring points. The game is played over several rounds, and the player with the fewest points at the end of the game wins.</p>" +
                 "<ul><li>Each round starts with players passing three cards to another player. The direction of passing alternates each round. In the first round, players pass to the left. In the second round, they pass to the right. In the third round, they pass across. There is no passing in the fourth round, and then the cycle repeats.</li>" +
                 "<li>After the pass, play starts with the player holding the 2 of clubs leading the trick by playing it. Each player, in turn, must follow suit if possible. If a player does not have any cards of the leading suit, they can play any other card. The player who played the highest value card of the leading suit wins the trick and leads the next one.</li>" +

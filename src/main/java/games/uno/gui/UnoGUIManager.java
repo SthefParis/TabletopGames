@@ -91,7 +91,7 @@ public class UnoGUIManager extends AbstractGUIManager {
                     mainGameArea.add(sides[i], locations[i]);
                 }
 
-                // Discard and draw piles go in the center
+                // Discard and draw piles go in the centre
                 JPanel centerArea = new JPanel();
                 centerArea.setLayout(new BoxLayout(centerArea, BoxLayout.Y_AXIS));
                 discardPile = new UnoDeckView(-1, ugs.getDiscardDeck(), true, ugp.getDataPath(), new Rectangle(0, 0, unoCardWidth, unoCardHeight));

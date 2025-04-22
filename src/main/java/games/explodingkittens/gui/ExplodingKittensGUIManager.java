@@ -89,7 +89,7 @@ public class ExplodingKittensGUIManager extends AbstractGUIManager {
                     mainGameArea.add(sides[i], locations[i]);
                 }
 
-                // Discard and draw piles go in the center
+                // Discard and draw piles go in the centre
                 JPanel centerArea = new JPanel();
                 centerArea.setLayout(new BoxLayout(centerArea, BoxLayout.Y_AXIS));
                 discardPile = new ExplodingKittensDiscardView(ekgs.getDiscardPile(), true, ekgp.getDataPath());

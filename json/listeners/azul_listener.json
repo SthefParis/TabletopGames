@@ -4,10 +4,13 @@
     [
       { "class": "evaluation.metrics.GameMetrics$PlayerType" },
       { "class": "evaluation.metrics.GameMetrics$FinalScore" },
-      { "class": "games.azul.stats.AzulMetrics$FirstColourPicked" },
+      { "class": "evaluation.metrics.GameMetrics$ComputationTimes" },
+      { "class": "games.azul.stats.AzulMetrics$FirstColourPickedPerRound" },
       { "class": "games.azul.stats.AzulMetrics$TilesPickedPerPlayer" },
       { "class": "games.azul.stats.AzulMetrics$FactoryVsCentrePicks" },
-      { "class": "games.azul.stats.AzulMetrics$PatternLineCompletionRate" }
+      { "class": "games.azul.stats.AzulMetrics$PatternLineCompletionRatePerRound" },
+      { "class": "games.azul.stats.AzulMetrics$PenaltiesPerRound" },
+      { "class": "games.azul.stats.AzulMetrics$PatternLineUsage" }
     ]
   ]
 }

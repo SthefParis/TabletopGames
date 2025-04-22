@@ -28,7 +28,7 @@ public class SaboteurBoardView extends JComponent {
         this.gui = gui;
         board = gs.getGridBoard();
         size = new Dimension(board.getWidth() * cellWidth, board.getHeight() * cellHeight);
-        panPos = new Point(-size.width/2 + boardSize/2, -size.height/2 + boardSize/2);  // Start focused on center
+        panPos = new Point(-size.width/2 + boardSize/2, -size.height/2 + boardSize/2);  // Start focused on centre
 
         addMouseListener(new MouseAdapter() {
             Point start;
@@ -85,42 +85,42 @@ public class SaboteurBoardView extends JComponent {
         boolean[] dirs = card.getDirections();
         if (card.type != PathCard.PathCardType.Edge) {
             if (dirs[0]) {
-                // North - center
+                // North - centre
                 g.fillRect(mX - pathSize /2, pY, pathSize, cellHeight/2);
             }
             if (dirs[1]) {
-                // South - center
+                // South - centre
                 g.fillRect(mX - pathSize /2, mY, pathSize, cellHeight/2);
             }
             if (dirs[2]) {
-                // West - center
+                // West - centre
                 g.fillRect(pX, mY - pathSize /2, cellWidth/2, pathSize);
             }
             if (dirs[3]) {
-                // East - center
+                // East - centre
                 g.fillRect(mX, mY - pathSize /2, cellWidth/2, pathSize);
             }
         } else {
             if (dirs[0]) {
-                // North - center
+                // North - centre
                 g.fillRect(mX - pathSize /2, pY, pathSize, cellHeight/2 - centerGap);
             }
             if (dirs[1]) {
-                // South - center
+                // South - centre
                 g.fillRect(mX - pathSize /2, mY + centerGap, pathSize, cellHeight/2 - centerGap);
             }
             if (dirs[2]) {
-                // West - center
+                // West - centre
                 g.fillRect(pX, mY - pathSize /2, cellWidth/2 - centerGap, pathSize);
             }
             if (dirs[3]) {
-                // East - center
+                // East - centre
                 g.fillRect(mX + centerGap, mY - pathSize /2, cellWidth/2 - centerGap, pathSize);
             }
         }
 
         if (card.type == PathCard.PathCardType.Goal) {
-            // Draw treasure in center of card
+            // Draw treasure in centre of card
             if (card.hasTreasure()) {
                 g.setColor(Color.yellow);
             } else {
