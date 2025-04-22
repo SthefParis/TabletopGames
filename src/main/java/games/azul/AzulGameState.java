@@ -32,7 +32,7 @@ public class AzulGameState extends AbstractGameState {
 
     List<AzulFactoryBoard> factoryBoards;
     List<AzulPlayerBoard> playerBoards;
-    AzulCentre center;
+    AzulCentre centre;
     HashMap<AzulTile, Integer> tileBag;
     HashMap<AzulTile, Integer> lid;
     AzulWallPattern wall;
@@ -61,7 +61,7 @@ public class AzulGameState extends AbstractGameState {
     public void setNumOfTilesPicked(int numOfTilesPicked) { this.numOfTilesPicked = numOfTilesPicked; }
     public int getNumOfTilesPicked() { return numOfTilesPicked; }
 
-    public AzulCentre getCenter(){ return center; }
+    public AzulCentre getCentre(){ return centre; }
 
     public AzulTile[][] getWallPattern() { return wall.patternPlayerBoard; }
     public AzulWallPattern getWall() { return wall; }
@@ -250,7 +250,7 @@ public class AzulGameState extends AbstractGameState {
         return new ArrayList<Component>() {{
             addAll(factoryBoards);
             addAll(playerBoards);
-            add(center);
+            add(centre);
         }};
     }
 
@@ -285,7 +285,7 @@ public class AzulGameState extends AbstractGameState {
             copy.playerBoards.add((AzulPlayerBoard) pb.copy());
         }
 
-        copy.center = (AzulCentre) center.copy();
+        copy.centre = (AzulCentre) centre.copy();
 
         copy.numOfTilesPicked = numOfTilesPicked;
         copy.pickedTile = pickedTile;
@@ -332,7 +332,7 @@ public class AzulGameState extends AbstractGameState {
                 hasPickedFromCenter == that.hasPickedFromCenter &&
                 Objects.equals(pickedTile, that.pickedTile) &&
                 Objects.equals(factoryBoards, that.factoryBoards) &&
-                Objects.equals(center, that.center) &&
+                Objects.equals(centre, that.centre) &&
                 Objects.equals(tileBag, that.tileBag) &&
                 Objects.equals(lid, that.lid) &&
                 Objects.equals(wall, that.wall) &&
@@ -342,7 +342,7 @@ public class AzulGameState extends AbstractGameState {
     @Override
     public int hashCode() {
         int result = Objects.hash(numOfTilesPicked, hasPickedFromCenter, pickedTile,
-                factoryBoards, playerBoards, center, tileBag, lid, wall);
+                factoryBoards, playerBoards, centre, tileBag, lid, wall);
         result = 31 * result + Arrays.hashCode(playerScore);
         return result;
     }

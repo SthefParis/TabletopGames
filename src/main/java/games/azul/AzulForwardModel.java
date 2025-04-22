@@ -91,8 +91,8 @@ public class AzulForwardModel extends StandardForwardModel {
         }
 
         // Initialise Center
-        ags.center = new AzulCentre();
-        ags.center.initialise(ags);
+        ags.centre = new AzulCentre();
+        ags.centre.initialise(ags);
 
         // First thing to do is pick up tile (Factory Offer)
         ags.setGamePhase(AzulGameState.AzulPhase.FactoryOffer);
@@ -405,7 +405,7 @@ public class AzulForwardModel extends StandardForwardModel {
             //intln("Factory after refill: " + Arrays.toString(factory.factoryBoard));
         }
 
-        ags.getCenter().addFirstPlayerTile();
+        ags.getCentre().addFirstPlayerTile();
         ags.setHasPickedFromCenter(false);
     }
 
@@ -453,12 +453,12 @@ public class AzulForwardModel extends StandardForwardModel {
         }
 
         // Check if centre is empty
-        return ags.getCenter().isEmpty();
+        return ags.getCentre().isEmpty();
     }
 
     private ArrayList<AbstractAction> pickUpTileFromCenterAction(AzulGameState ags, int playerID) {
         ArrayList<AbstractAction> actions = new ArrayList<>();
-        AzulCentre center = ags.getCenter();
+        AzulCentre center = ags.getCentre();
 
         Set<AzulTile> availableTileTypes = center.getTileTypes();
         //intln("Available tiles in centre: " + availableTileTypes);

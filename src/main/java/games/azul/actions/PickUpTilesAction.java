@@ -34,7 +34,7 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
     @Override
     public boolean execute(AbstractGameState gs) {
         AzulGameState ags = (AzulGameState) gs;
-        AzulCentre center = ags.getCenter();
+        AzulCentre center = ags.getCentre();
 
         if (factoryId == -1) {
             // Pick from centre
@@ -72,7 +72,7 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
 
         // Move remaining tiles to centre
         AzulTile[] remainingTiles = fb.clearTiles();
-        ags.getCenter().addTiles(remainingTiles);
+        ags.getCentre().addTiles(remainingTiles);
         //System.out.println("Remaining tiles moved to centre: " + Arrays.toString(remainingTiles));
         return true;
     }

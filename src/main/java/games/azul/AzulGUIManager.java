@@ -47,7 +47,7 @@ public class AzulGUIManager extends AbstractGUIManager {
     // List of Factory Boards
     private List<AzulFactoryBoardView> factoryBoards;
     private List<AzulPlayerBoardView> playerBoards;
-    private AzulCentreView centerView;
+    private AzulCentreView centreView;
 
     // Current active player
     private int activePlayer = -1;
@@ -100,10 +100,10 @@ public class AzulGUIManager extends AbstractGUIManager {
         // Main game area that will hold all game views
         factoryBoards = new ArrayList<>();
         playerBoards = new ArrayList<>();
-        centerView = new AzulCentreView(ags.center, 40, 10, 4);
+        centreView = new AzulCentreView(ags.centre, 40, 10, 4);
 
-        centerView.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(Color.BLACK, 2), "Center"));
+        centreView.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Color.BLACK, 2), "Centre"));
 
         JPanel mainGameArea = new JPanel();
         mainGameArea.setLayout(new BorderLayout());
@@ -148,25 +148,25 @@ public class AzulGUIManager extends AbstractGUIManager {
         // Add tabbed pane to main game area at the top
         mainGameArea.add(playerBoardTabs, BorderLayout.NORTH);
 
-        // Center panel which holds factories and tile disposal
-        JPanel centerArea = new JPanel();
-        centerArea.setOpaque(false);
+        // Centre panel which holds factories and tile disposal
+        JPanel centreArea = new JPanel();
+        centreArea.setOpaque(false);
         int factoriesPerRow = 5;
         int numRows = (int) Math.ceil((double) params.getNFactories() / factoriesPerRow);
-        centerArea.setLayout(new GridLayout(numRows, factoriesPerRow));
+        centreArea.setLayout(new GridLayout(numRows, factoriesPerRow));
 
         for (int j = 0; j < params.getNFactories(); j++) {
             AzulFactoryBoardView factoryBoard = new AzulFactoryBoardView(ags.getFactory(j), ags, j);
             factoryBoards.add(factoryBoard);
-            centerArea.add(factoryBoard);
+            centreArea.add(factoryBoard);
         }
 
         for (int j=0; j < params.getNFactories(); j++) {
-            centerArea.add(factoryBoards.get(j));
+            centreArea.add(factoryBoards.get(j));
         }
 
-        centerArea.add(centerView);
-        mainGameArea.add(centerArea, BorderLayout.CENTER);
+        centreArea.add(centreView);
+        mainGameArea.add(centreArea, BorderLayout.CENTER);
 
         // Top area will show state information
         JPanel infoPanel = createGameStateInfoPanel("Azul", gs, width, defaultInfoPanelHeight);
