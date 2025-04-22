@@ -8,6 +8,7 @@ import games.azul.gui.AzulFactoryBoardView;
 import games.azul.gui.AzulPlayerBoardView;
 import gui.AbstractGUIManager;
 import gui.GamePanel;
+import gui.IScreenHighlight;
 import players.human.ActionController;
 import utilities.ImageIO;
 
@@ -42,12 +43,9 @@ public class AzulGUIManager extends AbstractGUIManager {
     // Width and height of total window
     int width, height;
 
-    // Styling
-
     // List of Factory Boards
     private List<AzulFactoryBoardView> factoryBoards;
     private List<AzulPlayerBoardView> playerBoards;
-    private AzulCentreView centreView;
 
     // Current active player
     private int activePlayer = -1;
@@ -92,16 +90,13 @@ public class AzulGUIManager extends AbstractGUIManager {
         this.height = (int) (playerAreaHeight * nVertAreas) + 20;
         ruleText.setPreferredSize(new Dimension(width*2/3+60, height/3));
 
-//        parent.setBackground(ImageIO.GetInstance().getImage("data/azul/bg.jpg"));
-
         AzulGameState ags = (AzulGameState) gs;
         AzulParameters params = (AzulParameters) gs.getGameParameters();
 
         // Main game area that will hold all game views
         factoryBoards = new ArrayList<>();
         playerBoards = new ArrayList<>();
-        centreView = new AzulCentreView(ags.centre, 40, 10, 4);
-
+        AzulCentreView centreView = new AzulCentreView(ags.centre, 40, 10, 4);
         centreView.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.BLACK, 2), "Centre"));
 
@@ -136,7 +131,6 @@ public class AzulGUIManager extends AbstractGUIManager {
             playerPanels.add(playerPanel);
             playerPanel.setPreferredSize(new Dimension(playerAreaWidth, playerAreaHeight));
             playerPanel.setLayout(new BorderLayout());
-//            playerPanel.setOpaque(false);
             playerPanel.add(playerBoard, BorderLayout.CENTER);
 
             // Add tab for each player
@@ -150,19 +144,17 @@ public class AzulGUIManager extends AbstractGUIManager {
 
         // Centre panel which holds factories and tile disposal
         JPanel centreArea = new JPanel();
-        centreArea.setOpaque(false);
         int factoriesPerRow = 5;
         int numRows = (int) Math.ceil((double) params.getNFactories() / factoriesPerRow);
         centreArea.setLayout(new GridLayout(numRows, factoriesPerRow));
+
+        centreArea.setPreferredSize(new Dimension(100,400));
+        centreArea.setOpaque(true);
 
         for (int j = 0; j < params.getNFactories(); j++) {
             AzulFactoryBoardView factoryBoard = new AzulFactoryBoardView(ags.getFactory(j), ags, j);
             factoryBoards.add(factoryBoard);
             centreArea.add(factoryBoard);
-        }
-
-        for (int j=0; j < params.getNFactories(); j++) {
-            centreArea.add(factoryBoards.get(j));
         }
 
         centreArea.add(centreView);
@@ -172,11 +164,17 @@ public class AzulGUIManager extends AbstractGUIManager {
         JPanel infoPanel = createGameStateInfoPanel("Azul", gs, width, defaultInfoPanelHeight);
         infoPanel.setOpaque(false);
 
-        // Bottom area will show actions available
+//      Bottom area will show actions available
 //        JComponent actionPanel = createActionPanel(new IScreenHighlight[0], width, defaultActionPanelHeight, false, true, null, null, null);
 //        actionPanel.setOpaque(false);
 
-        main.add(mainGameArea, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(mainGameArea);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // smoother scroll
+
+        main.add(scrollPane, BorderLayout.CENTER);
         main.add(infoPanel, BorderLayout.NORTH);
 //        main.add(actionPanel, BorderLayout.SOUTH);
 
