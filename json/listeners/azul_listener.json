@@ -6,6 +6,12 @@
       {"enum" : "evaluation.metrics.IDataLogger$ReportType", "value" : "RawDataPerEvent"}
     ],
     [
+      {"class": "evaluation.metrics.GameMetrics$GameScore" },
+      {"class": "evaluation.metrics.GameMetrics$FinalScore" },
+      {"class": "evaluation.metrics.GameMetrics$OrdinalPosition" },
+      {"class": "evaluation.metrics.GameMetrics$Decisions" },
+      {"class": "evaluation.metrics.GameMetrics$Winner" },
+      {"class": "evaluation.metrics.GameMetrics$StateSpace" },
       { "class": "evaluation.metrics.GameMetrics$PlayerType" },
       { "class": "evaluation.metrics.GameMetrics$FinalScore" },
       { "class": "games.azul.stats.AzulMetrics$FirstColourPicked" },

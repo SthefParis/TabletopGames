@@ -167,7 +167,8 @@ public class AzulMetrics implements IMetricsCollection {
     }
 
     public static class PatternLineCompletionRate extends AbstractMetric {
-        private final Map<Integer, Integer> totalRowsCompleted = new HashMap<>();
+        // This map will store the number of completions per row for each player
+        private final Map<Integer, int[]> rowsCompleted = new HashMap<>();
         private final Map<Integer, Integer> totalTurns = new HashMap<>();
 
         @Override
@@ -176,29 +177,34 @@ public class AzulMetrics implements IMetricsCollection {
                 AzulGameState ags = (AzulGameState) e.state;
                 int playerId = e.playerID;
 
-                int completedThisTurn = 0;
+                // Initialize the row completion array for the player if not already done
+                rowsCompleted.putIfAbsent(playerId, new int[5]);  // 5 rows, indexed from 0 to 4
+                int[] playerRowsCompleted = rowsCompleted.get(playerId);
 
+                // Check each row for completion this turn
                 for (int row = 0; row < 5; row++) {
                     if (ags.getPlayerBoard(playerId).isPatternLineRowFull(row)) {
-                        completedThisTurn++;
+                        playerRowsCompleted[row]++;  // Increment completion count for the row
                     }
                 }
 
-                totalRowsCompleted.put(playerId, totalRowsCompleted.getOrDefault(playerId, 0) + completedThisTurn);
+                // Track the total number of turns for this player
                 totalTurns.put(playerId, totalTurns.getOrDefault(playerId, 0) + 1);
-//                System.out.printf("Player %d completed %d rows this turn%n", playerId, completedThisTurn);
 
                 return true;
             }
 
             if (e.type == GAME_OVER) {
-                for (int playerId : totalRowsCompleted.keySet()) {
-                    int completed = totalRowsCompleted.getOrDefault(playerId, 0);
-                    int turns = totalTurns.getOrDefault(playerId, 1);  // Avoid div by zero
-                    double rate = completed / (double) turns;
+                // At the end of the game, store the completion rate for each row per player
+                for (int playerId : rowsCompleted.keySet()) {
+                    int[] completedRows = rowsCompleted.getOrDefault(playerId, new int[5]);
+                    int turns = totalTurns.getOrDefault(playerId, 1);  // Avoid division by zero
 
-//                    System.out.printf("Player %d completed %.2f rows per turn%n", playerId, rate);
-                    records.put("PatternCompletionRate_P" + playerId, rate);
+                    // Store completion rate for each row
+                    for (int row = 0; row < 5; row++) {
+                        double rate = completedRows[row] / (double) turns;
+                        records.put("PatternCompletionRate_P" + playerId + "_Row" + row, rate);
+                    }
                 }
                 return true;
             }
@@ -214,12 +220,16 @@ public class AzulMetrics implements IMetricsCollection {
         @Override
         public Map<String, Class<?>> getColumns(int nPlayersPerGame, Set<String> playerNames) {
             Map<String, Class<?>> columns = new HashMap<>();
+            // Add a separate column for each row (0 to 4) for each player
             for (int playerId = 0; playerId < nPlayersPerGame; playerId++) {
-                columns.put("PatternCompletionRate_P" + playerId, Double.class);
+                for (int row = 0; row < 5; row++) {
+                    columns.put("PatternCompletionRate_P" + playerId + "_Row" + row, Double.class);
+                }
             }
             return columns;
         }
     }
+
 
 
 
