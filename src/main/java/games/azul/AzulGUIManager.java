@@ -95,7 +95,7 @@ public class AzulGUIManager extends AbstractGUIManager {
         // Main game area that will hold all game views
         factoryBoards = new ArrayList<>();
         playerBoards = new ArrayList<>();
-        AzulCenterView centerView = new AzulCenterView(ags.center, 40, 10, 4);
+        AzulCenterView centerView = new AzulCenterView(ags.center, 40, 10, 5);
         centerView.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.BLACK, 2), "Center"));
 
