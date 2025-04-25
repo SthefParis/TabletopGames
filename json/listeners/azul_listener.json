@@ -2,9 +2,6 @@
   "class": "evaluation.listeners.MetricsGameListener",
   "args": [
     [
-      { "class": "evaluation.metrics.GameMetrics$PlayerType" },
-      { "class": "evaluation.metrics.GameMetrics$FinalScore" },
-      { "class": "evaluation.metrics.GameMetrics$ComputationTimes" },
       { "class": "games.azul.stats.AzulMetrics$FirstColourPickedPerRound" },
       { "class": "games.azul.stats.AzulMetrics$TilesPickedPerPlayer" },
       { "class": "games.azul.stats.AzulMetrics$FactoryVsCentrePicks" },
