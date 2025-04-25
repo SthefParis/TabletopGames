@@ -17,7 +17,7 @@ public class AzulWallPattern {
         // Fill the board according to the Azul pattern
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
-                patternPlayerBoard[row][col] = tileOrder[(col + row) % tileOrder.length];
+                patternPlayerBoard[row][col] = tileOrder[(col - row + tileOrder.length) % tileOrder.length];
             }
         }
     }
