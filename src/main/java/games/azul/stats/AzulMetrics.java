@@ -6,7 +6,9 @@ import evaluation.metrics.AbstractMetric;
 import evaluation.metrics.Event;
 import evaluation.metrics.IMetricsCollection;
 import games.azul.AzulGameState;
+import games.azul.AzulParameters;
 import games.azul.actions.PickUpTilesAction;
+import games.azul.actions.PlaceTileAction;
 
 import java.util.*;
 
@@ -230,6 +232,97 @@ public class AzulMetrics implements IMetricsCollection {
         }
     }
 
+    public static class PenaltiesPerRound extends AbstractMetric {
+
+        @Override
+        protected boolean _run(MetricsGameListener listener, Event e, Map<String, Object> records) {
+            if (e.type == ROUND_OVER) {
+                AzulGameState ags = (AzulGameState) e.state;
+                AzulParameters params = (AzulParameters) ags.getGameParameters();
+                int round = e.state.getRoundCounter();
+
+                for (int player = 0; player < ags.getNPlayers(); player++) {
+                    int penalty = Arrays.stream(ags.getFloorLineAsIndex(player)).sum();
+
+//                    System.out.printf("Metrics: Player %d got %d penalties \n", player, penalty);
+                    String key = String.format("P%d_R%d", player, round);
+                    records.put(key, penalty);
+                }
+
+                return true;
+
+            }
+
+            return false;
+        }
+
+        @Override
+        public Set<IGameEvent> getDefaultEventTypes() {
+            return Set.of(ROUND_OVER);
+        }
+
+        @Override
+        public Map<String, Class<?>> getColumns(int nPlayersPerGame, Set<String> playerNames) {
+            Map<String, Class<?>> columns = new LinkedHashMap<>();
+            for (int p = 0; p < nPlayersPerGame; p++) {
+                for (int r = 0; r < 10; r++) {
+                    columns.put(String.format("P%d_R%d", p, r), Integer.class);
+                }
+            }
+            return columns;
+        }
+    }
+
+    public static class PatternLineUsage extends AbstractMetric {
+        HashMap<Integer, int[]> patternLineUsage = new HashMap<>();
+
+        @Override
+        protected boolean _run(MetricsGameListener listener, Event e, Map<String, Object> records) {
+            if (e.action instanceof PlaceTileAction) {
+                PlaceTileAction pta = (PlaceTileAction) e.action;
+                AzulGameState ags = (AzulGameState) e.state;
+                int player = e.playerID;
+
+                patternLineUsage.putIfAbsent(player, new int[5]);
+                int[] usage = patternLineUsage.get(player);
+                int lastPlacedRow = ags.getLastPlacedRow();
+                if (lastPlacedRow >= 0) {
+                    usage[lastPlacedRow]++;
+                }
+
+                return true;
+            }
+
+            if (e.type == GAME_OVER) {
+                for (Map.Entry<Integer, int[]> entry : patternLineUsage.entrySet()) {
+                    int playerId = entry.getKey();
+                    int[] usage = entry.getValue();
+                    for (int row = 0; row < usage.length; row++) {
+                        records.put(String.format("P%d_Row%d_Usage", playerId, row), usage[row]);
+                    }
+                }
+                patternLineUsage.clear();
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public Set<IGameEvent> getDefaultEventTypes() {
+            return Set.of(ACTION_CHOSEN, GAME_OVER);
+        }
+
+        @Override
+        public Map<String, Class<?>> getColumns(int nPlayersPerGame, Set<String> playerNames) {
+            Map<String, Class<?>> columns = new HashMap<>();
+            for (int player = 0; player < nPlayersPerGame; player++) {
+                for (int row = 0; row < 5; row++) {
+                    columns.put(String.format("P%d_Row%d_Usage", player, row), Integer.class);
+                }
+            }
+            return columns;
+        }
+    }
 
 
 

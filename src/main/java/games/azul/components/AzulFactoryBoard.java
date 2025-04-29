@@ -43,77 +43,39 @@ public class AzulFactoryBoard extends Component {
     public void refill(AzulGameState ags) {
         AzulParameters parameters = (AzulParameters) ags.getGameParameters();
         HashMap<AzulTile, Integer> tileCounts = ags.getAllTileCounts();
-        //System.out.println("Tile counts in refill: " + tileCounts);
         int totalTilesInBag = tileCounts.values().stream().mapToInt(Integer::intValue).sum();
 
-        //System.out.println("Total tiles in bag: " + totalTilesInBag);
-        //System.out.println("Factory size: " +factorySize);
         if (totalTilesInBag < factorySize) {
-            //System.out.println("Bag has less than 4 tiles. Bag: " + tileCounts + " Lid: " + ags.getLid());
-
             if (!ags.getLid().isEmpty()){
-                //System.out.println("Lid isnt empty");
-
                 tileCounts.clear();
                 tileCounts.putAll(ags.getLid());
                 ags.updateAllTileCounts(tileCounts);
                 ags.EmptyLid();
-
-                //System.out.println("Lid after transfer: " + ags.getLid());
-                //System.out.println("Bag after transfer: " + ags.getAllTileCounts());
             }
 
             totalTilesInBag = tileCounts.values().stream().mapToInt(Integer::intValue).sum();
-
-            // TESTING
-            if (totalTilesInBag < 4) {
-                //System.out.println("Even after transfer, not enough tiles to refill.");
-                return;
-            }
         }
 
         // Reset factory board
         Arrays.fill(factoryBoard, AzulTile.Empty);
 
-        // List to store selected tiles
-//        List<AzulTile> availableTiles = new ArrayList<>();
-//        tileCounts.forEach((tile, count) -> {
-//            for (int i = 0; i < count; i++) {
-//                availableTiles.add(tile);
-//            }
-//        });
         List<AzulTile> availableTiles = new ArrayList<>();
         for (Map.Entry<AzulTile, Integer> entry : tileCounts.entrySet()) {
             AzulTile tile = entry.getKey();
-//            System.out.println("Tile added to available tiles: " + tile);
             int count = entry.getValue();
-//            System.out.println("Number of times tile is added: " + count);
             // Add tiles as many times as its count
             for (int i = 0; i < count; i++){
                 availableTiles.add(tile);
-
-//                System.out.println("Available tiles after adding tile: "  +availableTiles);
             }
         }
 
-
-        //System.out.println("Available tiles: " + availableTiles);
-
         // Randomly shuffle and select 4 tiles
         Collections.shuffle(availableTiles);
-//        System.out.println("Available tiles have been shuffled: " + availableTiles);
         for (int j = 0; j < 4; j++) {
-//            System.out.println("Step 1");
             AzulTile drawnTile = availableTiles.get(j);
-//            System.out.println("Step 2");
             factoryBoard[j] = drawnTile;
-//            System.out.println("Drawn tile: " + drawnTile + " tile in factory board: " + factoryBoard[j]);
             tileCounts.put(drawnTile, tileCounts.get(drawnTile) - 1);
         }
-
-        //System.out.println("Factory board right after refill: " + Arrays.toString(factoryBoard));
-        //System.out.println("Lid at end of refill: " + ags.getLid());
-        //System.out.println("Bag at end of refill: " + ags.getAllTileCounts());
 
         ags.updateAllTileCounts(tileCounts);
     }
@@ -159,9 +121,6 @@ public class AzulFactoryBoard extends Component {
      * @return True if any tiles were removed.
      */
     public boolean removeTile(AzulGameState ags, AzulTile tile) {
-        //System.out.println("Factory board before: " + Arrays.toString(factoryBoard));
-        //System.out.println("Selected: " + tile.getTileType());
-
         int numTilesRemoved = 0;
 
         for (int i = 0; i < factoryBoard.length; i++) {
@@ -172,9 +131,6 @@ public class AzulFactoryBoard extends Component {
         }
 
         ags.setNumOfTilesPicked(numTilesRemoved);
-
-        //System.out.println("Factory board after: " + Arrays.toString(factoryBoard));
-        //System.out.println("Number of tiles removed: " + numTilesRemoved);
         return numTilesRemoved > 0;
     }
 

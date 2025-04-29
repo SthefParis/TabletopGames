@@ -43,6 +43,8 @@ public class AzulGameState extends AbstractGameState {
     private boolean hasPickedFromCenter = false;
     int[] playerScore;
     private int tilesPickedUp = -1;
+    int[] playersPenalty;
+    private int lastPlacedRow = -1;
 
     /**
      * @param gameParameters - game parameters.
@@ -67,6 +69,32 @@ public class AzulGameState extends AbstractGameState {
     public AzulWallPattern getWall() { return wall; }
     public void setWall(AzulWallPattern wall) { this.wall = wall; }
     public AzulTile getTileInWall(int row, int col) { return wall.patternPlayerBoard[row][col]; }
+
+    public void setLastPlacedRow(int row) {
+        this.lastPlacedRow = row;
+    }
+
+    public int getLastPlacedRow() {
+        return lastPlacedRow;
+    }
+
+
+    public int[] getFloorLineAsIndex(int playerId) {
+        AzulParameters params = (AzulParameters) getGameParameters();
+        AzulTile[] floorLine = getPlayerBoard(playerId).playerFloorLine;
+        int[] penaltiesForPlayer = new int[7];
+        int[] penalties = params.floorPenalties;
+
+        for (int i = 0; i < floorLine.length; i++) {
+            if (floorLine[i] == null || floorLine[i].equals(AzulTile.Empty)) {
+                return penaltiesForPlayer;
+            }
+
+            penaltiesForPlayer[i] = penalties[i];
+        }
+
+        return penaltiesForPlayer;
+    }
 
     public void updateTileCount(AzulTile tile, int count) {
         tileCounts.put(tile, tileCounts.getOrDefault(tile, 0) + count);
@@ -132,17 +160,6 @@ public class AzulGameState extends AbstractGameState {
         return completedCols;
     }
 
-//    public boolean isPatternLineRowComplete(int playerId, int row) {
-//        AzulPlayerBoard playerBoard = getPlayerBoard(playerId);
-//        int rowLength = playerBoard.getPatternLine()[row].length;
-//        for (int col=0; col < rowLength; col++) {
-//            if (playerBoard.getPatternLine()[row][col] == AzulTile.Empty && playerBoard.getPatternLine()[row][col] == null) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-
     // Moved to player board?
     public boolean isWallRowComplete(int playerId, int row) {
         AzulPlayerBoard playerBoard = getPlayerBoard(playerId);
@@ -202,7 +219,7 @@ public class AzulGameState extends AbstractGameState {
         int penalty = 0;
 
         for (int col = 0; col < floorLine.length; col++) {
-            if (floorLine[col] != AzulTile.Empty || floorLine[col] != null) {
+            if (floorLine[col] != AzulTile.Empty && floorLine[col] != null) {
                 penalty += penalties[Math.min(col, penalties.length-1)];
             }
         }

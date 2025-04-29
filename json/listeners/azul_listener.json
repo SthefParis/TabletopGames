@@ -17,7 +17,9 @@
       { "class": "games.azul.stats.AzulMetrics$FirstColourPicked" },
       { "class": "games.azul.stats.AzulMetrics$TilesPickedPerPlayer" },
       { "class": "games.azul.stats.AzulMetrics$FactoryVsCentrePicks" },
-      { "class": "games.azul.stats.AzulMetrics$PatternLineCompletionRate" }
+      { "class": "games.azul.stats.AzulMetrics$PatternLineCompletionRate" },
+      { "class": "games.azul.stats.AzulMetrics$PenaltiesPerRound" },
+      { "class": "games.azul.stats.AzulMetrics$PatternLineUsage" }
     ]
   ]
 }

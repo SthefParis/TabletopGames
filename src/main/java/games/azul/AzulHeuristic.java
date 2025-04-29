@@ -13,7 +13,7 @@ public class AzulHeuristic extends TunableParameters implements IStateHeuristic 
     double FACTOR_COMPLETED_ROWS = 1.0;
     double FACTOR_COMPLETED_COLS = 0.7;
     double FACTOR_COMPLETED_SETS = 0.9;
-    double FACTOR_NEGATIVE_POINTS = -0.7;
+    double FACTOR_NEGATIVE_POINTS = -1.0;
     double FACTOR_OPPONENT_DISRUPTION = 0.7;
 
     public AzulHeuristic() {

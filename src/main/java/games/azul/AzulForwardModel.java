@@ -43,6 +43,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
         // Initialise scores for all players, initially 0
         ags.playerScore = new int[firstState.getNPlayers()];
+        ags.playersPenalty = new int[firstState.getNPlayers()];
 
         // Initialise tile counts (bag)
         ags.tileCounts = new HashMap<>();
@@ -78,15 +79,12 @@ public class AzulForwardModel extends StandardForwardModel {
         ags.setWall(wall);
 
         // Initialise Factory
-        //System.out.println("Number of factories: " + params.nFactories);
         ags.factoryBoards = new ArrayList<>();
 
         for (int i = 0; i < params.nFactories; i++) {
             AzulFactoryBoard factoryBoard = new AzulFactoryBoard();
             factoryBoard.initialise(params, i);
             factoryBoard.refill(ags);
-
-//            System.out.println("Created factory board: " + i + ": " + Arrays.toString(factoryBoard.factoryBoard));
             ags.factoryBoards.add(factoryBoard);
         }
 
@@ -122,22 +120,26 @@ public class AzulForwardModel extends StandardForwardModel {
                     endPlayerTurn(ags, nextPlayer);
                     ags.setGamePhase(AzulGameState.AzulPhase.FactoryOffer);
                 }
-            } else if (ags.getGamePhase() == AzulGameState.AzulPhase.WallTiling) {
-                // Check if all players have completed their wall-tiling phase
-                boolean allPlayersCompleted = true;
-                for (int i = 0; i < ags.getNPlayers(); i++) {
-                    if (!isPlayerWallTilingComplete(ags, i)) {
-                        allPlayersCompleted = false;
-                        break;
-                    }
-                }
-
-                // If all players have finished, move to the next phase
-                if (allPlayersCompleted) {
-//                    System.out.println("All players have completed wall tiling. Moving to next phase.");
-                    ags.setGamePhase(AzulGameState.AzulPhase.PrepNextRnd);
-                }
             }
+//            else if (ags.getGamePhase() == AzulGameState.AzulPhase.WallTiling) {
+//                // Check if all players have completed their wall-tiling phase
+//                boolean allPlayersCompleted = true;
+//                System.out.println("Wall tile");
+//                for (int i = 0; i < ags.getNPlayers(); i++) {
+//                    if (!isPlayerWallTilingComplete(ags, i)) {
+//                        allPlayersCompleted = false;
+//                        break;
+//                    }
+//                }
+//
+//                // If all players have finished, move to the next phase
+//                if (allPlayersCompleted) {
+////                    System.out.println("All players have completed wall tiling. Moving to next phase.");
+//                    ags.setGamePhase(AzulGameState.AzulPhase.PrepNextRnd);
+//                }
+//            }
+        } else {
+            ags.setGamePhase(AzulGameState.AzulPhase.FactoryOffer);
         }
     }
 
@@ -166,9 +168,7 @@ public class AzulForwardModel extends StandardForwardModel {
             actions.addAll(pickUpTileFromCenterAction(ags, playerID));
         } else if (AzulGameState.AzulPhase.PlaceTile.equals(ags.getGamePhase())) {
 //            System.out.println("In place tile");
-            actions = placeTileActions(ags, playerID);
-        } else {
-//            System.out.println("No action available");
+            actions.addAll(placeTileActions(ags, playerID));
         }
 
         if (actions.isEmpty()) {
@@ -197,6 +197,7 @@ public class AzulForwardModel extends StandardForwardModel {
         if (isFactoriesAndCentreEmpty(ags)){
 //            System.out.println("Round is ending: Factories and center are empty");
 
+            endRound(ags);
             // Wall tile
             executeWallTilingPhase(ags);
 
@@ -205,7 +206,7 @@ public class AzulForwardModel extends StandardForwardModel {
                 ags.getPlayerBoard(playerID).clearFloorLine(ags);
             }
 
-            endRound(ags);
+//            endRound(ags);
 
             // Check if game has ended
             if (checkEndOfGame(ags)) {
@@ -217,7 +218,7 @@ public class AzulForwardModel extends StandardForwardModel {
             }
 
             // Prep for next round if game has not ended
-            executePrepNxtRound(ags);
+            executePrepNextRound(ags);
 
             return true;
         }
@@ -301,7 +302,7 @@ public class AzulForwardModel extends StandardForwardModel {
                 penalty += penaltyValues[i];
             }
         }
-        //System.out.println("penalty for player " + playerID + " : " + penalty);
+//        System.out.println("penalty for player " + playerID + " : " + penalty);
         int playerScore = (int) ags.getGameScore(playerID);
         //System.out.println("Player score before deducted penalty: " + playerScore);
         playerScore = playerScore - penalty;
@@ -367,7 +368,7 @@ public class AzulForwardModel extends StandardForwardModel {
     }
 
     private void executeWallTilingPhase(AzulGameState ags) {
-
+        ags.setGamePhase(AzulGameState.AzulPhase.WallTiling);
         for (int playerID = 0; playerID < ags.getNPlayers(); playerID++) {
             AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
             AzulWallPattern wall = ags.getWall();
@@ -379,18 +380,11 @@ public class AzulForwardModel extends StandardForwardModel {
 
                 if (playerBoard.isPatternLineRowFull(row) && playerBoard.isPositionEmpty(row, col)) {
                     if (col != -1) {
-                        // Automatically place the tile on the wall without an explicit action
                         boolean tilePlaced = playerBoard.placeTileInWall(ags, tile, row, col);
-//                        executeScoring(ags, playerID, row, col);
 
                         if (tilePlaced) {
-                            //System.out.println("Player " + playerID + " placed " + tile + " tile on their wall, row: " + row + " col: " + col);
                             executeScoring(ags, playerID, row, col);
-                        } else {
-                            //System.out.println("Tile could not be placed on player " + playerID + "'s wall.");
                         }
-                    } else {
-                        //System.out.println("Error: tile colour not found in player " + playerID + "'s wall.");
                     }
                 }
                 if (playerBoard.isPatternLineRowFull(row) && !playerBoard.isPositionEmpty(row, col)) {
@@ -398,19 +392,12 @@ public class AzulForwardModel extends StandardForwardModel {
                 }
             }
         }
-
-//        ags.setHasPickedFromCenter(false);
-        //System.out.println("Tiles remaining in bag: " + ags.getAllTileCounts().keySet() + " " + ags.getAllTileCounts().values());
     }
 
-    private void executePrepNxtRound(AzulGameState ags) {
-        //System.out.println("Preparing next round!");
-        //System.out.println("Bag: " + ags.tileCounts);
-        //System.out.println("Lid: " + ags.getLid());
-
+    private void executePrepNextRound(AzulGameState ags) {
+        ags.setGamePhase(AzulGameState.AzulPhase.PrepNextRnd);
         for (AzulFactoryBoard factory : ags.getAllFactoryBoards()) {
             factory.refill(ags);
-            //intln("Factory after refill: " + Arrays.toString(factory.factoryBoard));
         }
 
         ags.getCenter().addFirstPlayerTile();
@@ -421,29 +408,23 @@ public class AzulForwardModel extends StandardForwardModel {
         ArrayList<AbstractAction> actions = new ArrayList<>();
 
         List<AzulFactoryBoard> factoryBoards = ags.getAllFactoryBoards();
-        //System.out.println("Factory boards at start of pickUpTileActions: " + factoryBoards.size());
 
         boolean allEmpty = factoryBoards.stream().allMatch(AzulFactoryBoard::isEmpty);
 
         if (allEmpty) {
-            //System.out.println("Factory boards is empty!");
             return actions;
-        } else { // TESTING
-            //System.out.println("Factory boards is not empty!");
         }
 
         // Create the respective actions for each tile on the factory boards
         for (AzulFactoryBoard factoryBoard : factoryBoards) {
             // Get unique tile types in factory
             Set<AzulTile> availableTileTypes = factoryBoard.getTileTypes();
-            //System.out.println("Available tile types: " + availableTileTypes);
 
             // Add a pick-up action for each tile type present in the factory
             for (AzulTile availableTile : availableTileTypes) {
                 if (availableTile != AzulTile.Empty) {
                     int factoryIndex = ags.getAllFactoryBoards().indexOf(factoryBoard);
                     PickUpTilesAction action = new PickUpTilesAction(playerID, availableTile, factoryIndex);
-                    //System.out.println("Adding action: " + action);
                     actions.add(action);
                 }
             }
@@ -469,7 +450,6 @@ public class AzulForwardModel extends StandardForwardModel {
         AzulCenter center = ags.getCenter();
 
         Set<AzulTile> availableTileTypes = center.getTileTypes();
-        //intln("Available tiles in center: " + availableTileTypes);
 
         for (AzulTile availableTile : availableTileTypes) {
             if (availableTile != AzulTile.Empty && availableTile != AzulTile.FirstPlayer && availableTile != null) {
@@ -484,8 +464,6 @@ public class AzulForwardModel extends StandardForwardModel {
     private ArrayList<AbstractAction> placeTileActions(AzulGameState ags, int playerID) {
         ArrayList<AbstractAction> actions = new ArrayList<>();
         AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
-        //intln("Player id: " + playerID);
-        //System.out.println("Player " + playerID + " board: " + Arrays.deepToString(playerBoard.playerPatternWall));
 
         for (int row = 0; row < playerBoard.playerPatternWall.length; row++) { // Iterate rows
             if (!playerBoard.isPatternLineRowFull(row)) { // Ensure the row is valid

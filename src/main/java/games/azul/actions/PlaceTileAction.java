@@ -62,34 +62,19 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
      */
     public void placeTileOnTempBoard(AzulGameState ags){
         AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
-        int numOfTilesPlaced = 0;
 
         for (int i = 0; i < numOfTiles; i++) {
             boolean tilePlacedInPatternLine = playerBoard.placeTileInPatternLine(ags, tile, row);
 
-            if (tilePlacedInPatternLine) {
-                numOfTilesPlaced++;
-                //System.out.println("Successfully placed " + tile.getTileType() + " tile " + (i + 1) + " out of " + numOfTiles + " in row " + row);
-            }
-            else {
+            if (!tilePlacedInPatternLine) {
                 inFloorLine = true;
-                //System.out.println("Failed to place " + tile.getTileType() + " tile " + (i + 1) + "/" + numOfTiles + " in row " + row + ". Moving to floor line.");
                 playerBoard.placeTileInFloorLine(ags, tile);
-                //System.out.println("Floor Line main");
             }
-        }
-
-        //TESTING
-        if (numOfTilesPlaced == numOfTiles) {
-            //System.out.println("All " + numOfTiles + " tiles successfully placed in row " + row);
-        } else {
-            //System.out.println((numOfTiles - numOfTilesPlaced) + " tiles moved to the floor line.");
         }
     }
 
     public void placeTileOnFloorLine(AzulGameState ags) {
-        AzulPlayerBoard playerBoard= ags.getPlayerBoard(playerID);
-
+        AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
         playerBoard.placeTileInFloorLine(ags, tile);
     }
 

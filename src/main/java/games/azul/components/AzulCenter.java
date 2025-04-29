@@ -68,8 +68,6 @@ public class AzulCenter extends Component {
         }
 
         ags.setNumOfTilesPicked(numTilesRemoved);
-//        System.out.println("Center after: " + Arrays.toString(center.toArray()));
-//        System.out.println("Number of tiles removed: " + numTilesRemoved);
 
         return numTilesRemoved > 0;
     }
