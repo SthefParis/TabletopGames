@@ -130,16 +130,6 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
         return factoryId != -1;
     }
 
-//    /**
-//     * Returns how many tiles were picked up in this action.
-//     *
-//     * @param ags - The Game state.
-//     * @return Number of tiles picked.
-//     */
-//    public Integer getTileCount(AzulGameState ags) {
-//        return ags.getNumOfTilesPicked();
-//    }
-
     @Override
     public AbstractAction copy() {
         return new PickUpTilesAction(playerID, tile, factoryId);
@@ -172,4 +162,3 @@ public class PickUpTilesAction extends AbstractAction implements IPrintable {
                 : String.format("Picked up %s tiles from factory %d.", tile.getTileType(), factoryId);
     }
 }
-

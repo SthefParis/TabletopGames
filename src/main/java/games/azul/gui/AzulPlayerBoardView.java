@@ -13,6 +13,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/**
+ * Constructs the AzulPlayerBoardView GUI component.
+ * Initializes the highlight rectangles and sets up a mouse listener
+ * to allow user interaction (click to highlight).
+ */
 public class AzulPlayerBoardView extends ComponentView implements IScreenHighlight {
 
     AzulGameState ags;
@@ -111,7 +116,10 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
         }
     }
 
-    // Draws Wall
+    /**
+     * Draws the player's permanent wall (mosaic) from a 2D AzulTile array.
+     * Tiles are drawn in a grid on the right-hand side of the component.
+     */
     private void drawPlayerBoard(Graphics2D g, AzulPlayerBoard playerBoard, int x, int y) {
 
         // Iterate over the playerWall to draw each tile
@@ -121,16 +129,16 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
                 int yC = y + i * tileSize;
 
                 AzulTile tile = playerBoard.playerWall[i][j];
-//                System.out.println("Tile in player wall: " + tile.getTileType());
-
                 drawCell(g, tile, xC, yC, true, i, j);
             }
         }
     }
 
-    // Draws Pattern Line from right to left
+    /**
+     * Draws the player's temporary pattern lines aligned from right to left.
+     * This is the pattern lines that fills during the game before moving to the wall.
+     */
     private void drawPlayerTempBoard(Graphics2D g, AzulPlayerBoard playerBoard, int x, int y) {
-//        System.out.println("Printing temp board");
         int spacing = 0;
 
         g.setFont(new Font("Arial", Font.PLAIN, defaultFontSize));
@@ -157,6 +165,10 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
         }
     }
 
+    /**
+     * Draws the floor line below the pattern and wall boards.
+     * Displays the penalty tiles and overlays their negative score values.
+     */
     private void drawFloorLine(Graphics2D g, AzulPlayerBoard playerFloorLine,int x, int y) {
         AzulParameters params =(AzulParameters) ags.getGameParameters();
         int[] floorPenalties = params.getFloorPenalties();
@@ -194,6 +206,10 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
         }
     }
 
+    /**
+     * Draws the score track above the player board using a rectangular grid layout.
+     * Highlights the current player score, and numbers every 5th cell.
+     */
     private void drawScoreTrack(Graphics2D g, AzulPlayerBoard playerBoard, int x, int y) {
         int cellsPerRow = 20;
         int cellWidth = defaultWidth/2;
@@ -229,6 +245,10 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
         }
     }
 
+    /**
+     * Helper method for drawing a single score track cell.
+     * Applies background colour, border, and displays numbers on orange cells.
+     */
     private void drawScoreTrackCell(Graphics2D g, int x, int y, int width, int height, Color bgColor, int number){
         // Paint cell background
         g.setColor(bgColor);
@@ -248,7 +268,13 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
         }
     }
 
-    // Helper function to get colors for Azul tiles
+    /**
+     * Maps AzulTile enum values to their respective colours.
+     * Defaults to empty tile colour if the tile is not recognised.
+     *
+     * @param tile - Tile to be placed.
+     * @return the colour the cell should be.
+     */
     private Color getTileColor(AzulTile tile) {
         return switch (tile) {
             case White -> AzulTile.White.getColor();
@@ -261,6 +287,9 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
         };
     }
 
+    /**
+     * General-purpose method to draw a single tile (cell) on the board.
+     */
     private void drawCell(Graphics2D g, AzulTile tile, int xC, int yC, boolean isWallCell, int row, int col) {
         Color tileColor;
 
@@ -286,6 +315,10 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
         g.drawRect(xC, yC, tileSize, tileSize);
     }
 
+    /**
+     * Updates the visual representation of the player's board with new data.
+     * Clear highlight rectangles and redraws everything.
+     */
     public void updateComponent(AzulPlayerBoard updatedPlayerBoard) {
         if (updatedPlayerBoard == null) return;
 
@@ -300,9 +333,11 @@ public class AzulPlayerBoardView extends ComponentView implements IScreenHighlig
         repaint();
     }
 
+    /**
+     * Returns the list of currently highlighted tiles (as Rectangles).
+     */
     public ArrayList<Rectangle> getHighlight() { return highlight; }
 
     @Override
     public void clearHighlights() { highlight.clear(); }
-
 }

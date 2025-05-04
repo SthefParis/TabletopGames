@@ -30,6 +30,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Initialises the player's board with the appropriate sizes for the walls, patern lines, score track, and floor line.
+     *
      * @param ags - Game state, used to get the game parameters.
      * @param playerID - ID of the player this board belongs to.
      */
@@ -44,16 +45,17 @@ public class AzulPlayerBoard extends Component {
         this.playerFloorLine = new AzulTile[floorLineSize];
         this.playerID = playerID;
 
-        for(int i = 0; i < boardSize; i++){
-            playerPatternWall[i] = new AzulTile[i+1];
-            for(AzulTile tile : playerPatternWall[i]) {
-                tile = AzulTile.Empty;
+        for (int i = 0; i < boardSize; i++) {
+            playerPatternWall[i] = new AzulTile[i + 1];
+            for (int j = 0; j <= i; j++) {
+                playerPatternWall[i][j] = AzulTile.Empty;
             }
         }
     }
 
     /**
      * Gets the player's Wall.
+     *
      * @return the player's wall.
      */
     public AzulTile[][] getPlayerWall(){
@@ -62,6 +64,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Places a tile in the players wall.
+     *
      * @param ags - Game state.
      * @param tile - Tile that needs to be placed.
      * @param row - Row that tile needs to be placed on.
@@ -82,6 +85,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Checks if a specific position in the wall is empty.
+     *
      * @param row - Row to check.
      * @param col - Column to check.
      * @return boolean - Returns true if the position is empty, false otherwise.
@@ -92,6 +96,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Places a tile in the pattern wall if the row is valid for the tile type.
+     *
      * @param ags - Game state.
      * @param tile - Tile that needs to be placed.
      * @param row - Row in which the tile needs to be placed.
@@ -131,6 +136,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Checks if a given row is valid for placing a specific tile.
+     *
      * @param row - Row to check.
      * @param tile - Tile type to check.
      */
@@ -145,6 +151,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Finds a valid row for placing a tile.
+     *
      * @param tile - Tile type that needs to be placed.
      * @return integer - Number of valid row.
      */
@@ -159,6 +166,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Places a tile in the player's floor line if no valid row is found or if row is full.
+     *
      * @param ags - Game state.
      * @param tile - Tile type that needs to be placed.
      */
@@ -178,22 +186,8 @@ public class AzulPlayerBoard extends Component {
     }
 
     /**
-     * Checks if a given pattern line row is empty.
-     * @param row - Row it will check.
-     * @return true if the pattern line is empty, false otherwise.
-     */
-    public boolean isPatternLineEmpty(int row) {
-        for (int i = 0; i < playerPatternWall[row].length; i++) {
-            if (playerPatternWall[row][i] != null && playerPatternWall[row][i] != AzulTile.Empty) {
-                return false;
-
-            }
-        }
-        return true;
-    }
-
-    /**
      * Checks if a given pattern line is full.
+     *
      * @param row - Row it will check.
      * @return true if the pattern line is full, false otherwise.
      */
@@ -209,6 +203,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Checks if the given tile has already been placed in the wall at a specific row.
+     *
      * @param tile - Tile that will be checked.
      * @param row - Row where tile is being placed.
      * @return true if tile has been placed, false otherwise.
@@ -224,6 +219,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Gets the tile type placed in a row (used to identify row colour).
+     *
      * @param row - Row where tile colour is checked.
      * @return AzulTile of the tile that is on that row.
      */
@@ -237,12 +233,11 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Function clears row in Pattern Line once row is full and tile has been moved to the wall.
+     *
      * @param ags - Game state.
      * @param row - Row that is full on pattern line
      */
     public void clearRowOnPatternLine(AzulGameState ags, int row, int col) {
-        AzulParameters params = (AzulParameters) ags.getGameParameters();
-
         if (col != -1) {
             // Find the right-most tile in the row
             AzulTile rightMostTile = null;
@@ -284,6 +279,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Checks if a specified index in the floor line is occupied.
+     *
      * @param i - The cell that should be checked.
      * @return true if that cell is occupied, false otherwise.
      */
@@ -293,6 +289,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Clears all tiles from the floor  line, moving them to the lid.
+     *
      * @param ags - Game state.
      */
     public void clearFloorLine(AzulGameState ags) {
@@ -314,6 +311,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Checks if a particular row in the player's wall is complete.
+     *
      * @param row - The row to check.
      * @return true if the entire row has non-empty tiles, false otherwise.
      */
@@ -329,6 +327,7 @@ public class AzulPlayerBoard extends Component {
 
     /**
      * Checks if the specified column in the player's wall is completely filled with tiles.
+     *
      * @param col - The column to check.
      * @return true if the entire column has non-empty tiles, false otherwise.
      */

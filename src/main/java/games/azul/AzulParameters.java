@@ -44,6 +44,7 @@ public class AzulParameters extends AbstractParameters {
 
     /**
      * Function initializes the parameters based on the number of players. And initializes the correct pattern on the wall.
+     *
      * @param nPlayers - Number of players in the game.
      */
     public void initialise(int nPlayers){

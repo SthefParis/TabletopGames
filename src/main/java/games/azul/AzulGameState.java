@@ -52,12 +52,14 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Returns the list of all factory boards in the game.
+     *
      * @return List of AzulFactoryBoard objects.
      */
     public List<AzulFactoryBoard> getAllFactoryBoards(){ return factoryBoards; }
 
     /**
      * Returns a specific factory board by its ID.
+     *
      * @param factoryID - Index of the factory.
      * @return AzulFactoryBoard at the specified index.
      */
@@ -65,6 +67,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Return a specific player's board by their ID.
+     *
      * @param playerID - Index of the player.
      * @return AzulPlayerBoard for the given player.
      */
@@ -72,36 +75,42 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Sets the currently picked tile by the player.
+     *
      * @param pickedTile - The tile that was picked.
      */
     public void setPickedTile(AzulTile pickedTile) { this.pickedTile = pickedTile; }
 
     /**
      * Gets the tile that was most recently picked.
+     *
      * @return the last picked AzulTile.
      */
     public AzulTile getTilesPicked() { return pickedTile; }
 
     /**
      * Sets the number of tiles picked by the player.
+     *
      * @param numOfTilesPicked - The number of tiles picked.
      */
     public void setNumOfTilesPicked(int numOfTilesPicked) { this.numOfTilesPicked = numOfTilesPicked; }
 
     /**
      * Gets the number of tiles picked by the player.
+     *
      * @return number of tiles picked.
      */
     public int getNumOfTilesPicked() { return numOfTilesPicked; }
 
     /**
      * Returns the shared tile center for all players.
+     *
      * @return AzulCenter component.
      */
     public AzulCenter getCenter(){ return center; }
 
     /**
      * Sets the row index where the last tile was placed by the player.
+     *
      * @param row - Index of row.
      */
     public void setLastPlacedRow(int row) {
@@ -110,6 +119,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Gets the row index where the last tile was placed.
+     *
      * @return index of the last placed row.
      */
     public int getLastPlacedRow() {
@@ -118,6 +128,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Converts the floor line of the given player into an array of penalty values.
+     *
      * @param playerId - ID of the player.
      * @return array of penalty values corresponding to floor tile positions.
      */
@@ -140,18 +151,21 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Updates the current tile count tracking with a new set of counts.
+     *
      * @param tileCounts - Hashmap containing tile type and their counts.
      */
     public void updateAllTileCounts(HashMap<AzulTile, Integer> tileCounts) { this.tileCounts = tileCounts; }
 
     /**
      * Returns the current map of all tile counts in the game.
+     *
      * @return HashMap of tile counts.
      */
     public HashMap<AzulTile, Integer> getAllTileCounts() { return tileCounts; }
 
     /**
      * Updates the lid (discard pile) by adding the specified number of tiles.
+     *
      * @param tile - The tile type to be added.
      * @param count - Number of tiles to add.
      */
@@ -161,6 +175,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Returns the current contents of the lid (discard pile).
+     *
      * @return HashMap of tile types and their counts.
      */
     public HashMap<AzulTile, Integer> getLid() { return lid; }
@@ -178,18 +193,21 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Sets whether the player has picked tiles from the center this round.
+     *
      * @param hasPickedFromCenter - True if the player has picked from center.
      */
     public void setHasPickedFromCenter(boolean hasPickedFromCenter) { this.hasPickedFromCenter = hasPickedFromCenter; }
 
     /**
      * Checks if the player has picked tiles from the center this round.
+     *
      * @return True if picked from center, false otherwise.
      */
     public boolean hasPickedFromCenter() { return hasPickedFromCenter; }
 
     /**
      * Sets a player's score to the given value.
+     *
      * @param points - The new score.
      * @param playerID - The player's ID.
      */
@@ -197,6 +215,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Adds points to a player's score.
+     *
      * @param playerID - ID of the player.
      * @param points - Points to add.
      */
@@ -204,6 +223,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Subtracts points from a player's score, ensuring it does not go below 0.
+     *
      * @param playerID - ID of the player.
      * @param points - Points to subtract.
      */
@@ -215,6 +235,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Calculates the number of fully completed rows on the player's wall.
+     *
      * @param gs - Current game state.
      * @param playerId - Player's ID.
      * @return number of completed rows.
@@ -236,6 +257,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Calculates the number of fully completed columns on the player's wall.
+     *
      * @param gs - Current game state.
      * @param playerId - Player's ID.
      * @return number of completed columns.
@@ -257,6 +279,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Calculates the number of colour sets (one tile of each colour in a column) completed by the player.
+     *
      * @param gs - Current game state.
      * @param playerID - Player's ID.
      * @return number of completed colour sets.
@@ -289,6 +312,7 @@ public class AzulGameState extends AbstractGameState {
 
     /**
      * Calculates the total negative points a player will incur this round due to their floor line.
+     *
      * @param gs - Current game state.
      * @param playerId - ID of the player.
      * @return total penalty points.

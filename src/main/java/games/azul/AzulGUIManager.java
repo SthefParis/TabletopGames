@@ -8,6 +8,7 @@ import games.azul.gui.AzulFactoryBoardView;
 import games.azul.gui.AzulPlayerBoardView;
 import gui.AbstractGUIManager;
 import gui.GamePanel;
+import gui.IScreenHighlight;
 import players.human.ActionController;
 import utilities.ImageIO;
 
@@ -151,7 +152,7 @@ public class AzulGUIManager extends AbstractGUIManager {
         centerArea.setOpaque(true);
 
         for (int j = 0; j < params.getNFactories(); j++) {
-            AzulFactoryBoardView factoryBoard = new AzulFactoryBoardView(ags.getFactory(j), ags, j);
+            AzulFactoryBoardView factoryBoard = new AzulFactoryBoardView(ags.getFactory(j), ags);
             factoryBoards.add(factoryBoard);
             centerArea.add(factoryBoard);
         }
@@ -164,8 +165,6 @@ public class AzulGUIManager extends AbstractGUIManager {
         infoPanel.setOpaque(false);
 
 //      Bottom area will show actions available
-//        JComponent actionPanel = createActionPanel(new IScreenHighlight[0], width, defaultActionPanelHeight, false, true, null, null, null);
-//        actionPanel.setOpaque(false);
 
         JScrollPane scrollPane = new JScrollPane(mainGameArea);
         scrollPane.setOpaque(false);
@@ -175,7 +174,6 @@ public class AzulGUIManager extends AbstractGUIManager {
 
         main.add(scrollPane, BorderLayout.CENTER);
         main.add(infoPanel, BorderLayout.NORTH);
-//        main.add(actionPanel, BorderLayout.SOUTH);
 
         // Add all views to frame
         parent.setLayout(new BorderLayout());

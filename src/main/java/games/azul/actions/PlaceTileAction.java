@@ -73,6 +73,11 @@ public class PlaceTileAction extends AbstractAction implements IPrintable {
         }
     }
 
+    /**
+     * Places tiles in the next available space in the floor line.
+     *
+     * @param ags - Game state.
+     */
     public void placeTileOnFloorLine(AzulGameState ags) {
         AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
         playerBoard.placeTileInFloorLine(ags, tile);

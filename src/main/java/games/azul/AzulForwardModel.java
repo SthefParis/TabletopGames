@@ -90,7 +90,9 @@ public class AzulForwardModel extends StandardForwardModel {
     }
 
     /**
-     * r     * @return - List of AbstractAction objects.
+     * Calculates the list of currently available actions.
+     *
+     * @return - List of AbstractAction objects.
      */
     @Override
     protected List<AbstractAction> _computeAvailableActions(AbstractGameState gameState) {
@@ -152,6 +154,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Generates a list of all valid pick-up tile actions from factories for the current player.
+     *
      * @param ags - Game state.
      * @param playerID - ID of the player whose turn it is.
      * @return list of valid pick-up actions.
@@ -187,6 +190,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Generates a list of valid pick-up actions from the center for the current player.
+     *
      * @param ags - Game state.
      * @param playerID - ID of the player whose turn it is.
      * @return list of center pick-up actions.
@@ -209,6 +213,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Generates a list of valid tile placement actions for the current player.
+     *
      * @param ags - Game state.
      * @param playerID - ID of the player whose turn it is.
      * @return list of tile placement actions.
@@ -238,6 +243,7 @@ public class AzulForwardModel extends StandardForwardModel {
     /**
      * Checks whether the round should end (all factories and center are empty).
      * If so, proceeds to end-round tasks: wall tiling, scoring, penalty and game end check.
+     *
      * @param ags - Game state.
      * @return true if the round ends (and possibly the game), false otherwise
      */
@@ -273,6 +279,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Checks if the game has ended by checking for any completed wall rows.
+     *
      * @param ags - Game state.
      * @return true if the game should end, false otherwise.
      */
@@ -293,6 +300,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Calculates and applies score after a tile is placed on the wall.
+     *
      * @param ags - Game state.
      * @param playerID - ID of player who has just completed a wall tiling action.
      * @param row - Row where tile has been placed.
@@ -314,6 +322,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Calculates the score of a tile just placed on the wall based on adjacent tiles.
+     *
      * @param ags - Game state.
      * @param playerBoard - The player's board.
      * @param row - Row of the placed tile.
@@ -343,6 +352,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Recursively counts adjacent tiles in a given direction from a starting tile.
+     *
      * @param playerBoard - The player's board.
      * @param row - Starting row.
      * @param col - Starting column.
@@ -368,6 +378,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Calculates and applies floor line penalty points to a player.
+     *
      * @param ags - Game state.
      * @param playerBoard - The player's board.
      * @param playerID - ID of the player being penalized.
@@ -389,6 +400,7 @@ public class AzulForwardModel extends StandardForwardModel {
     /**
      * Calculates and adds bonus points to a player at game end.
      * Bonuses include completed rows, columns, and full sets of tile colors.
+     *
      * @param ags - Game state.
      * @param playerBoard - The player's board.
      * @param playerID - ID of the player receiving bonuses.
@@ -432,6 +444,7 @@ public class AzulForwardModel extends StandardForwardModel {
     /**
      * Performs wall tiling phase for all players.
      * Moves completed pattern line tiles to the wall and scores them.
+     *
      * @param ags - Game state.
      */
     private void executeWallTilingPhase(AzulGameState ags) {
@@ -463,6 +476,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Prepares the game state for the next round by refilling factories and resetting flags.
+     *
      * @param ags - Game state.
      */
     private void executePrepNextRound(AzulGameState ags) {
@@ -477,6 +491,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
     /**
      * Checks if all factory boards and the center are empty.
+     *
      * @param ags - Game state.
      * @return true if all factories are empty, false otherwise.
      */

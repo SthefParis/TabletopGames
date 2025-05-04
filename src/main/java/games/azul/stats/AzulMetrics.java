@@ -17,6 +17,9 @@ import static evaluation.metrics.Event.GameEvent.*;
 @SuppressWarnings("unused")
 public class AzulMetrics implements IMetricsCollection {
 
+    /**
+     * Tracks the first tile colour each player picks in every round.
+     */
     public static class FirstColourPicked extends AbstractMetric {
 
         private final Map<Integer, String> firstColourPerRound = new HashMap<>();
@@ -58,6 +61,9 @@ public class AzulMetrics implements IMetricsCollection {
         }
     }
 
+    /**
+     * Records the total number of tiles each player picks during a game.
+     */
     public static class TilesPickedPerPlayer extends AbstractMetric {
         Map<Integer, Integer> numTilesPickedPerTurn = new HashMap<>();
         private int currentRound = -1;
@@ -85,7 +91,6 @@ public class AzulMetrics implements IMetricsCollection {
                 numTilesPickedPerTurn.put(player, numTilesPickedPerTurn.getOrDefault(player, 0) + tilesPicked);
 
                 for (int playerId : numTilesPickedPerTurn.keySet()) {
-//                    System.out.println("Player " + playerId + " picked up " + numTilesPickedPerTurn.get(playerId) + " tile(s).");
                     records.put("NumTilesPicked_P" + playerId, numTilesPickedPerTurn.get(playerId));
                 }
                 return true;
@@ -108,6 +113,9 @@ public class AzulMetrics implements IMetricsCollection {
         }
     }
 
+    /**
+     * Separately tracks how many times each player picks tiles from a factory vs the center.
+     */
     public static class FactoryVsCentrePicks extends AbstractMetric {
         private final Map<Integer, Integer> factoryPicksPerPlayer = new HashMap<>();
         private final Map<Integer, Integer> centerPicksPerPlayer = new HashMap<>();
@@ -125,9 +133,6 @@ public class AzulMetrics implements IMetricsCollection {
                 }
 
                 for (int playerId : factoryPicksPerPlayer.keySet()) {
-//                    System.out.println("Player " + playerId + " - Factory Picks: " + factoryPicksPerPlayer.get(playerId) +
-//                            ", Center Picks: " + centerPicksPerPlayer.get(playerId));
-
                     // Store the picks per player in the records
                     records.put("FactoryPicks_P" + playerId, factoryPicksPerPlayer.get(playerId));
                     records.put("CenterPicks_P" + playerId, centerPicksPerPlayer.get(playerId));
@@ -135,19 +140,6 @@ public class AzulMetrics implements IMetricsCollection {
                 return true;
             }
 
-//            if (e.type == Event.GameEvent.GAME_OVER) {
-//                System.out.println("Game over");
-//
-//                for (int playerId : factoryPicksPerPlayer.keySet()) {
-//                    System.out.println("Player " + playerId + " - Factory Picks: " + factoryPicksPerPlayer.get(playerId) +
-//                            ", Center Picks: " + centerPicksPerPlayer.get(playerId));
-//
-//                    // Store the picks per player in the records
-//                    records.put("FactoryPicks_P" + playerId, factoryPicksPerPlayer.get(playerId));
-//                    records.put("CenterPicks_P" + playerId, centerPicksPerPlayer.get(playerId));
-//                }
-//                return true;
-//            }
             return false;
         }
 
@@ -168,6 +160,9 @@ public class AzulMetrics implements IMetricsCollection {
         }
     }
 
+    /**
+     * Calculates the completion rate of each pattern line row for each player.
+     */
     public static class PatternLineCompletionRate extends AbstractMetric {
         // This map will store the number of completions per row for each player
         private final Map<Integer, int[]> rowsCompleted = new HashMap<>();
@@ -232,6 +227,9 @@ public class AzulMetrics implements IMetricsCollection {
         }
     }
 
+    /**
+     * Records the penalty (from the floor line) each player receives per round.
+     */
     public static class PenaltiesPerRound extends AbstractMetric {
 
         @Override
@@ -244,7 +242,6 @@ public class AzulMetrics implements IMetricsCollection {
                 for (int player = 0; player < ags.getNPlayers(); player++) {
                     int penalty = Arrays.stream(ags.getFloorLineAsIndex(player)).sum();
 
-//                    System.out.printf("Metrics: Player %d got %d penalties \n", player, penalty);
                     String key = String.format("P%d_R%d", player, round);
                     records.put(key, penalty);
                 }
@@ -273,6 +270,9 @@ public class AzulMetrics implements IMetricsCollection {
         }
     }
 
+    /**
+     * Tracks how often each pattern line row is used by each player throughout the game.
+     */
     public static class PatternLineUsage extends AbstractMetric {
         HashMap<Integer, int[]> patternLineUsage = new HashMap<>();
 
@@ -323,17 +323,4 @@ public class AzulMetrics implements IMetricsCollection {
             return columns;
         }
     }
-
-
-
-
-    // public static class WallCompletionRate
-    // public static class Penalties
-    // public static class AverageFinalScore
-    // public static class EndgameStrategy
-    // public static class TileColourFrequency
-    // public static class TilePlacement
-
-
-
 }

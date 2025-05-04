@@ -5,41 +5,44 @@ import java.awt.*;
 public enum AzulTile {
     Empty(Color.GRAY),
     White(Color.WHITE),
-    Black(Color.BLACK, "data/azul/images/tiles/Black.jpg"),
-    Red(Color.RED, "data/azul/images/tiles/Red.jpg"),
-    Orange(Color.ORANGE, "data/azul/images/tiles/Orange.jpg"),
-    Blue(Color.BLUE, "data/azul/images/tiles/Blue.jpg"),
+    Black(Color.BLACK),
+    Red(Color.RED),
+    Orange(Color.ORANGE),
+    Blue(Color.BLUE),
     FirstPlayer(Color.MAGENTA);
 
-    // Fields for color code and image path
-    private final Color colorCode;
-    private final String imagePath;
+    // Stores the colour associated with the tile
+    private final Color color;
 
     // Constructor for tiles without an image path
     AzulTile(Color color) {
-        this.colorCode = color;
-        this.imagePath = null;
+        this.color = color;
     }
 
-    // Constructor for tiles with an image path
-    AzulTile(Color color, String imagePath) {
-        this.colorCode = color;
-        this.imagePath = imagePath;
-    }
-
+    /**
+     * Gets the colour object associated with the tile.
+     *
+     * @return the colour object.
+     */
     public Color getColor() {
-        return colorCode;
+        return color;
     }
 
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    // Returns the tile type
+    /**
+     * Gets the tile type of the tile.
+     *
+     * @return the tile type.
+     */
     public AzulTile getTileType() {
         return this;
     }
 
+    /**
+     * Converts a colour object to its corresponding colour name as a String.
+     *
+     * @param color - The colour to be converted to a string.
+     * @return a String of the colour.
+     */
     public String getColourAsString(Color color) {
         String colorAsString = "";
 
@@ -49,8 +52,7 @@ public enum AzulTile {
         if (color == Color.ORANGE) colorAsString = "Orange";
         if (color == Color.BLUE) colorAsString = "Blue";
         if (color == Color.MAGENTA) colorAsString = "Magenta";
-
-
+        
         return colorAsString;
     }
 }

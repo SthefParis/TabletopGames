@@ -55,10 +55,10 @@ public class AzulCenterView extends ComponentView {
     /**
      * Renders the tiles as a grid of colored rectangles.
      *
-     * @param g
-     * @param tiles
-     * @param offsetX
-     * @param offsetY
+     * @param g - The Graphics2D object used to draw.
+     * @param tiles - The list of tiles to render.
+     * @param offsetX - Horizontal offset from the component origin.
+     * @param offsetY - Vertical offset from the component origin.
      */
     private void drawTilesGrid(Graphics2D g, List<AzulTile> tiles, int offsetX, int offsetY) {
         g.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -79,6 +79,12 @@ public class AzulCenterView extends ComponentView {
         }
     }
 
+    /**
+     * Maps on AzulTile enum to its corresponding display colour.
+     *
+     * @param tile - The AzulTile to covert.
+     * @return the colour associated with the tile.
+     */
     private Color getTileColor(AzulTile tile) {
         return switch (tile) {
             case White -> AzulTile.White.getColor();
@@ -91,11 +97,29 @@ public class AzulCenterView extends ComponentView {
         };
     }
 
-    // Helper record to store tile layout info
+    /**
+     * Represents a tile's position in the layout grid.
+     *
+     * @param x - X position.
+     * @param y - Y position.
+     * @param tile - Tile to place in position (x, y).
+     */
     private record TilePosition(int x, int y, AzulTile tile) {}
 
-    // Layout helper class to compute tile positions
+    /**
+     * Helper class that computes the x/y positions for each tile in a grid.
+     */
     private static class AzulTileLayout {
+
+        /**
+         * Calculates layout positions for tiles arranged in a grid.
+         *
+         * @param tiles - The list of tiles to lay out.
+         * @param tileSize - Size of each tile.
+         * @param spacing - Spacing between tiles.
+         * @param tilesPerRow - Maximum tiles per row.
+         * @return a list of TilePosition objects containing coordinates and tile references.
+         */
         public static List<TilePosition> computeLayout(List<AzulTile> tiles, int tileSize, int spacing, int tilesPerRow) {
             List<TilePosition> positions = new ArrayList<>();
             int row = 0, col = 0;

@@ -38,7 +38,8 @@ public class AzulFactoryBoard extends Component {
 
     /**
      * Refills the factory with 4 random tiles from the bag (refilling from the lid if needed).
-     * @param ags
+     *
+     * @param ags - Game state.
      */
     public void refill(AzulGameState ags) {
         AzulParameters parameters = (AzulParameters) ags.getGameParameters();
