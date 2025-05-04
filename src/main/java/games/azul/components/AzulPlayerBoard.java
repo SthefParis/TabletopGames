@@ -31,6 +31,7 @@ public class AzulPlayerBoard extends Component {
     /**
      * Initialises the player's board with the appropriate sizes for the walls, patern lines, score track, and floor line.
      * @param ags - Game state, used to get the game parameters.
+     * @param playerID - ID of the player this board belongs to.
      */
     public void initialise(AzulGameState ags, int playerID){
         int boardSize = ((AzulParameters) ags.getGameParameters()).getBoardSize();
@@ -49,6 +50,14 @@ public class AzulPlayerBoard extends Component {
                 tile = AzulTile.Empty;
             }
         }
+    }
+
+    public AzulTile[][] getPlayerWall(){
+        return playerWall;
+    }
+
+    public AzulTile[][] getPatternLine() {
+        return playerPatternWall;
     }
 
     /**
@@ -169,24 +178,10 @@ public class AzulPlayerBoard extends Component {
     }
 
     /**
-     * Checks if tile can be placed in a specific row.
-     * @param row
-     * @return
+     * Checks if a given pattern line row is empty.
+     * @param row - Row it will check.
+     * @return true if the pattern line is empty, false otherwise.
      */
-    public boolean canPlaceTile(int row) {
-        boolean isRowFull = isPatternLineRowFull(row);
-
-        return !isRowFull;
-    }
-
-    public AzulTile[][] getPlayerWall(){
-        return playerWall;
-    }
-
-    public AzulTile[][] getPatternLine() {
-        return playerPatternWall;
-    }
-
     public boolean isPatternLineEmpty(int row) {
         for (int i = 0; i < playerPatternWall[row].length; i++) {
             if (playerPatternWall[row][i] != null && playerPatternWall[row][i] != AzulTile.Empty) {
@@ -197,6 +192,11 @@ public class AzulPlayerBoard extends Component {
         return true;
     }
 
+    /**
+     * Checks if a given pattern line is full.
+     * @param row - Row it will check.
+     * @return true if the pattern line is full, false otherwise.
+     */
     public boolean isPatternLineRowFull(int row) {
         // Check if row is full
         for (AzulTile tile: playerPatternWall[row]){
@@ -207,6 +207,12 @@ public class AzulPlayerBoard extends Component {
         return true;
     }
 
+    /**
+     * Checks if the given tile has already been placed in the wall at a specific row.
+     * @param tile - Tile that will be checked.
+     * @param row - Row where tile is being placed.
+     * @return true if tile has been placed, false otherwise.
+     */
     public boolean hasBeenTiled(AzulTile tile, int row) {
         for (int col = 0; col < playerWall[row].length; col++) {
             if (playerWall[row][col] == tile) {
@@ -216,22 +222,14 @@ public class AzulPlayerBoard extends Component {
         return false;
     }
 
-
-    public boolean isRowTiled(int row) {
-        // Check if the entire row is filled with a tile (none of the positions are empty)
-        for (int col = 0; col < playerPatternWall[row].length; col++) {
-            if (playerPatternWall[row][col] == AzulTile.Empty) {
-                return false; // If any position in the row is empty, the row is not tiled
-            }
-        }
-        return true; // All positions in the row are filled with a tile, the row is fully tiled
-    }
-
-
+    /**
+     * Gets the tile type placed in a row (used to identify row colour).
+     * @param row - Row where tile colour is checked.
+     * @return AzulTile of the tile that is on that row.
+     */
     public AzulTile getTileAt(int row) {
         if (row >= 0 && row < playerPatternWall.length && playerPatternWall[row].length > 0) {
             // Since all tiles in this row are the same, return the tile in the first column.
-            //System.out.println("Tile colour returned: " + playerPatternWall[row][0]);
             return playerPatternWall[row][0];
         }
         return AzulTile.Empty;
@@ -256,17 +254,12 @@ public class AzulPlayerBoard extends Component {
                     rightMostTile = tile;
                     rightMostTileIndex = col1;
                     playerPatternWall[row][col1] = AzulTile.Empty;
-                    //System.out.println("Row in pattern wall: " + Arrays.toString(playerPatternWall[row]));
                     break;
                 }
             }
 
-            if (rightMostTile != null || rightMostTile != AzulTile.Empty) {
-                playerWall[row][col] = rightMostTile;
-                //System.out.println("Moved " + rightMostTile.getTileType() + " to wall at position " + row + ", " + col);
+            playerWall[row][col] = rightMostTile;
 
-
-            }
 
             // Now, move all other tiles to the lid (except for the right-most one)
             for (int col2 = 0; col2 < playerPatternWall[row].length; col2++) {
@@ -280,7 +273,6 @@ public class AzulPlayerBoard extends Component {
         }
         // If col = -1, then row is full but tile has already been placed in wall
         else{
-            //System.out.println("Adding completed row to lid as tile in wall already exists.");
             AzulTile tile = playerPatternWall[row][0];
             int numOfTiles = row  + 1;
             ags.updateLid(tile, numOfTiles);
@@ -288,10 +280,37 @@ public class AzulPlayerBoard extends Component {
             Arrays.fill(playerPatternWall[row], AzulTile.Empty);
         }
 
-        //System.out.println("Lid: Key: " + ags.getLid().keySet() + " values: " + ags.getLid().values());
     }
 
+    /**
+     * Checks if a specified index in the floor line is occupied.
+     * @param i - The cell that should be checked.
+     * @return true if that cell is occupied, false otherwise.
+     */
+    public boolean isFloorLineOccupied(int i) {
+        return playerFloorLine[i] != null && playerFloorLine[i] != AzulTile.Empty;
+    }
 
+    /**
+     * Clears all tiles from the floor  line, moving them to the lid.
+     * @param ags - Game state.
+     */
+    public void clearFloorLine(AzulGameState ags) {
+        for (int col = 0; col < playerFloorLine.length; col++) {
+            AzulTile tile = playerFloorLine[col];
+
+            if (playerFloorLine[col] != AzulTile.Empty && playerFloorLine[col] != null) {
+                if (playerFloorLine[col] == AzulTile.FirstPlayer) {
+                    playerFloorLine[col] = AzulTile.Empty;
+                    continue;
+                }
+
+                ags.updateLid(tile, 1);
+
+                playerFloorLine[col] = AzulTile.Empty;
+            }
+        }
+    }
 
     /**
      * @return Make sure to return an exact <b>deep</b> copy of the object, including all of its variables.
@@ -319,8 +338,6 @@ public class AzulPlayerBoard extends Component {
             copy.playerWall[i] = Arrays.copyOf(playerWall[i], boardSize);
 
             copy.playerPatternWall[i] = Arrays.copyOf(playerPatternWall[i], playerPatternWall[i].length);
-//            copy.playerPatternWall[i] = new AzulTile[playerPatternWall[i].length];
-            //System.arraycopy(playerPatternWall[i], 0, copy.playerPatternWall[i], 0, playerPatternWall[i].length);
         }
 
         return copy;
@@ -344,27 +361,5 @@ public class AzulPlayerBoard extends Component {
         result = 31 * result + Arrays.hashCode(playerScoreTrack);
         result = 31 * result + Arrays.hashCode(playerFloorLine);
         return result;
-    }
-
-    public boolean isFloorLineOccupied(int i) {
-        return playerFloorLine[i] != null && playerFloorLine[i] != AzulTile.Empty;
-    }
-
-    public void clearFloorLine(AzulGameState ags) {
-        for (int col = 0; col < playerFloorLine.length; col++) {
-            AzulTile tile = playerFloorLine[col];
-
-            if (playerFloorLine[col] != AzulTile.Empty && playerFloorLine[col] != null) {
-                if (playerFloorLine[col] == AzulTile.FirstPlayer) {
-                    playerFloorLine[col] = AzulTile.Empty;
-                    continue;
-                }
-
-                ags.updateLid(tile, 1);
-
-                //System.out.println(tile + " tile has been removed from floorline. Added to lid: " + ags.getLid().toString());
-                playerFloorLine[col] = AzulTile.Empty;
-            }
-        }
     }
 }

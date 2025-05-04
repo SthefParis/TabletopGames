@@ -291,7 +291,6 @@ public class AzulForwardModel extends StandardForwardModel {
         return false;
     }
 
-
     /**
      * Calculates and applies score after a tile is placed on the wall.
      * @param ags - Game state.
@@ -426,7 +425,6 @@ public class AzulForwardModel extends StandardForwardModel {
         for (Map.Entry<AzulTile, Integer> entry : colorCount.entrySet()) {
             if (entry.getValue() == 5) {
                 ags.addPlayerPoint(playerID, params.getColorSetBonusPoints());
-                //intln("Player " + playerID + " has placed all 5 tiles of colour " + entry.getKey() + " and gained 10 points.");
             }
         }
     }
