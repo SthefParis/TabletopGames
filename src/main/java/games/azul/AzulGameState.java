@@ -8,7 +8,6 @@ import games.GameType;
 import games.azul.components.AzulCenter;
 import games.azul.components.AzulFactoryBoard;
 import games.azul.components.AzulPlayerBoard;
-import games.azul.components.AzulWallPattern;
 import games.azul.tiles.AzulTile;
 
 import java.util.*;
@@ -35,7 +34,6 @@ public class AzulGameState extends AbstractGameState {
     AzulCenter center;
     HashMap<AzulTile, Integer> tileCounts;
     HashMap<AzulTile, Integer> lid;
-    AzulWallPattern wall;
 
     private int hasFirstPlayerTile = -1;
     private AzulTile pickedTile;
@@ -64,11 +62,6 @@ public class AzulGameState extends AbstractGameState {
     public int getNumOfTilesPicked() { return numOfTilesPicked; }
 
     public AzulCenter getCenter(){ return center; }
-
-    public AzulTile[][] getWallPattern() { return wall.patternPlayerBoard; }
-    public AzulWallPattern getWall() { return wall; }
-    public void setWall(AzulWallPattern wall) { this.wall = wall; }
-    public AzulTile getTileInWall(int row, int col) { return wall.patternPlayerBoard[row][col]; }
 
     public void setLastPlacedRow(int row) {
         this.lastPlacedRow = row;
@@ -285,7 +278,6 @@ public class AzulGameState extends AbstractGameState {
 
         copy.numOfTilesPicked = numOfTilesPicked;
         copy.pickedTile = pickedTile;
-        copy.wall = wall;
 
         copy.tileCounts = new HashMap<>();
         // Assuming AzulTile is immutable
@@ -331,14 +323,13 @@ public class AzulGameState extends AbstractGameState {
                 Objects.equals(center, that.center) &&
                 Objects.equals(tileCounts, that.tileCounts) &&
                 Objects.equals(lid, that.lid) &&
-                Objects.equals(wall, that.wall) &&
                 Arrays.equals(playerScore, that.playerScore);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(numOfTilesPicked, hasPickedFromCenter, pickedTile,
-                factoryBoards, playerBoards, center, tileCounts, lid, wall);
+                factoryBoards, playerBoards, center, tileCounts, lid);
         result = 31 * result + Arrays.hashCode(playerScore);
         return result;
     }

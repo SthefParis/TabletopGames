@@ -9,7 +9,6 @@ import games.azul.actions.PlaceTileAction;
 import games.azul.components.AzulCenter;
 import games.azul.components.AzulFactoryBoard;
 import games.azul.components.AzulPlayerBoard;
-import games.azul.components.AzulWallPattern;
 import games.azul.tiles.AzulTile;
 
 import java.util.*;
@@ -71,12 +70,6 @@ public class AzulForwardModel extends StandardForwardModel {
             playerBoard.setOwnerId(i);
             ags.playerBoards.add(playerBoard);
         }
-
-        // Initialise Wall
-        AzulWallPattern wall = new AzulWallPattern();
-        wall.initialise(params);
-
-        ags.setWall(wall);
 
         // Initialise Factory
         ags.factoryBoards = new ArrayList<>();
@@ -240,18 +233,16 @@ public class AzulForwardModel extends StandardForwardModel {
 
         // Find tile that has just been placed and score it
         if (playerBoard.getPlayerWall()[row][col] != AzulTile.Empty && playerBoard.getPlayerWall()[row][col] != null) {
-            int tileScore = calculateTileScore(playerBoard, row, col);
+            int tileScore = calculateTileScore(ags, playerBoard, row, col);
             score += tileScore;
-//            System.out.println("Tile at (" + row + "," + col + ") added " + tileScore + " points. Total: " + score);
         }
 
-//        System.out.println("PlayerID in scoring: " + playerID);
         ags.setPlayerScore(score, playerID);
-        //System.out.println("Score after placing tile in row " + row + " col " + col + " : " + score);
     }
 
-    private int calculateTileScore(AzulPlayerBoard playerBoard, int row, int col) {
-        int score = 1;  // Scores one for placing tile down
+    private int calculateTileScore(AzulGameState ags, AzulPlayerBoard playerBoard, int row, int col) {
+        AzulParameters params = (AzulParameters) ags.getGameParameters();
+        int score = params.getPlacingTilePoints();  // Scores one for placing tile down
 
         // Count connected tiles in the row
         int rowCount = 1 + countTilesInDirection(playerBoard, row, col, 0, -1) // Left
@@ -266,10 +257,6 @@ public class AzulForwardModel extends StandardForwardModel {
 
         // If intersection is formed, tile is scored twice
         if (rowCount > 1 && colCount > 1) score++;
-
-        //System.out.println("rowCount calculated: " + rowCount);
-        //System.out.println("colCount calculated: " + colCount);
-        //System.out.println("Score: " + score);
 
         return score;
     }
@@ -286,9 +273,7 @@ public class AzulForwardModel extends StandardForwardModel {
             count++;
             newRow += dRow;
             newCol += dCol;
-            //System.out.println("new row: " + newRow + " new col: " + newCol);
         }
-        //System.out.println("Count tiles in direction: " + count);
         return count;
     }
 
@@ -302,11 +287,8 @@ public class AzulForwardModel extends StandardForwardModel {
                 penalty += penaltyValues[i];
             }
         }
-//        System.out.println("penalty for player " + playerID + " : " + penalty);
-        int playerScore = (int) ags.getGameScore(playerID);
-        //System.out.println("Player score before deducted penalty: " + playerScore);
-        playerScore = playerScore - penalty;
-        //System.out.println("Player score after deducted penalty: " + playerScore);
+//        int playerScore = (int) ags.getGameScore(playerID);
+//        playerScore = playerScore - penalty;
 //        ags.setPlayerScore(playerScore, playerID);
         ags.subtractPlayerPoint(playerID, penalty);
     }
@@ -328,12 +310,12 @@ public class AzulForwardModel extends StandardForwardModel {
     }
 
     private void calculateBonusPoints(AzulGameState ags, AzulPlayerBoard playerBoard, int playerID) {
-        //System.out.println("BONUS POINTS!!!");
-        //System.out.println("Player " + playerID + " score before bonus: " + ags.getGameScore(playerID));
+        AzulParameters params = (AzulParameters) ags.getGameParameters();
+
         // Award 2 points for any completed rows
         for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
             if (ags.isWallRowComplete(playerID, row)) {
-                ags.addPlayerPoint(playerID, 2);
+                ags.addPlayerPoint(playerID, params.getRowBonusPoints());
                 //System.out.println("Player " + playerID + " has completed row " + row + " and gained 2 points.");
             }
         }
@@ -341,7 +323,7 @@ public class AzulForwardModel extends StandardForwardModel {
         // Award 7 points for any completed columns
         for (int col = 0; col < playerBoard.getPlayerWall().length; col++) {
             if (ags.isWallColComplete(playerID, col)) {
-                ags.addPlayerPoint(playerID, 7);
+                ags.addPlayerPoint(playerID, params.getColumnBonusPoints());
                 //System.out.println("Player " + playerID + " has completed col " + col + " and gained 7 points.");
             }
         }
@@ -360,7 +342,7 @@ public class AzulForwardModel extends StandardForwardModel {
         // Award 10 points for each colour that appears exactly 5 times
         for (Map.Entry<AzulTile, Integer> entry : colorCount.entrySet()) {
             if (entry.getValue() == 5) {
-                ags.addPlayerPoint(playerID, 10);
+                ags.addPlayerPoint(playerID, params.getColorSetBonusPoints());
                 //intln("Player " + playerID + " has placed all 5 tiles of colour " + entry.getKey() + " and gained 10 points.");
             }
         }
@@ -368,15 +350,15 @@ public class AzulForwardModel extends StandardForwardModel {
     }
 
     private void executeWallTilingPhase(AzulGameState ags) {
+        AzulParameters params = (AzulParameters) ags.getGameParameters();
         ags.setGamePhase(AzulGameState.AzulPhase.WallTiling);
         for (int playerID = 0; playerID < ags.getNPlayers(); playerID++) {
             AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
-            AzulWallPattern wall = ags.getWall();
 
             // Check all rows on the player's wall
             for (int row = 0; row < playerBoard.playerPatternWall.length; row++) {
                 AzulTile tile = playerBoard.getTileAt(row);
-                int col = wall.getTileColPositionInRow(row, tile);
+                int col = params.getTileColPositionInRow(row, tile);
 
                 if (playerBoard.isPatternLineRowFull(row) && playerBoard.isPositionEmpty(row, col)) {
                     if (col != -1) {

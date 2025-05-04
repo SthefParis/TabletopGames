@@ -3,6 +3,7 @@ package games.azul;
 import core.AbstractGameState;
 import core.AbstractParameters;
 import evaluation.optimisation.TunableParameters;
+import games.azul.tiles.AzulTile;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -20,52 +21,76 @@ import java.util.Objects;
 public class AzulParameters extends AbstractParameters {
 
     // Board and factory parameters
-    int playerBoardSize = 5;
-    int maxTilesInFloorLine = 7;
-    int tilesInScoreTrack = 101;
-    int factoryBoardHeight = 1;
+    final int playerBoardSize = 5;
+    final int maxTilesInFloorLine = 7;
+    final int tilesInScoreTrack = 101;
+    final int factoryBoardHeight = 1;
     int factoryBoardWidth;
-    int nTilesperFactory = 4;
+    final int nTilesPerFactory = 4;
     int nFactories;
-    int totalColours = 5;
-
-    // Round parameters
-    int maxRounds = 5;
-    int maxPoints = 240;
+    final int totalColours = 5;
 
     // Scoring parameters
-    int rowBonusPoints = 2;
-    int columnBonusPoints = 7;
-    int colorSetBonusPoints = 10;
-    int adjacencyBasePoints = 1;
+    private final int rowBonusPoints = 2;
+    private final int columnBonusPoints = 7;
+    private final int colorSetBonusPoints = 10;
+    private final int placingTilePoints = 1;
 
     // Penalty parameters
     int[] floorPenalties = {1, 1, 2, 2, 2, 3, 3};
 
+    // Wall Pattern Positions
+    public AzulTile[][] wallPattern;
+
+    /**
+     * Function initializes the parameters based on the number of players. And initializes the correct pattern on the wall.
+     * @param nPlayers - Number of players in the game.
+     */
+    public void initialise(int nPlayers){
+        this.nFactories = ((nPlayers)*2) + 1;
+        this.factoryBoardWidth = this.nFactories * this.nTilesPerFactory;
+
+        int boardSize = getBoardSize();
+        this.wallPattern = new AzulTile[boardSize][boardSize];
+
+        AzulTile[] tileOrder = {
+                AzulTile.Blue, AzulTile.Orange, AzulTile.Red, AzulTile.Black, AzulTile.White
+        };
+
+        // Fill the board according to the Azul pattern
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                wallPattern[row][col] = tileOrder[(col - row + tileOrder.length) % tileOrder.length];
+            }
+        }
+    }
+
     public int getBoardSize() { return playerBoardSize; }
-    public int getNTilesPerFactory() { return nTilesperFactory; }
-    public int getTotalTilesInFactories() { return getNTilesPerFactory() * getNFactories(); }
+    public int getNTilesPerFactory() { return nTilesPerFactory; }
     public int getNFactories() { return nFactories; }
-    public int getMaxRounds() { return maxRounds; }
 
     // Points
-    public int getMaxPoints() { return maxPoints; }
     public int getRowBonusPoints() { return rowBonusPoints; }
     public int getColumnBonusPoints() { return columnBonusPoints; }
     public int getColorSetBonusPoints() { return colorSetBonusPoints; }
-    public int getAdjacencyBasePoints() { return adjacencyBasePoints; }
+    public int getPlacingTilePoints() { return placingTilePoints; }
 
     public int[] getFloorPenalties() { return floorPenalties; }
     public int getScoreTrackLength() { return tilesInScoreTrack; }
     public int getFloorLineLength() { return maxTilesInFloorLine; }
 
-    /**
-     * Function initializes the parameters based on the number of players.
-     * @param nPlayers - Number of players in the game.
-     */
-    public void initialise(int nPlayers){
-        this.nFactories = ((nPlayers)*2) + 1;
-        this.factoryBoardWidth = this.nFactories * this.nTilesperFactory;
+    public int getTileColPositionInRow(int row, AzulTile tile) {
+        if (row < 0 || row >= wallPattern.length) {
+            return -1;
+        }
+
+        for (int col = 0; col < wallPattern[row].length; col++) {
+            if (wallPattern[row][col] == tile) {
+                return col;
+            }
+        }
+
+        return -1;
     }
 
     @Override
@@ -78,28 +103,16 @@ public class AzulParameters extends AbstractParameters {
         if (this == o) return true;
         if (!(o instanceof AzulParameters)) return false;
         AzulParameters that = (AzulParameters) o;
-        return playerBoardSize == that.playerBoardSize &&
-                maxTilesInFloorLine == that.maxTilesInFloorLine &&
-                tilesInScoreTrack == that.tilesInScoreTrack &&
-                factoryBoardHeight == that.factoryBoardHeight &&
-                factoryBoardWidth == that.factoryBoardWidth &&
-                nTilesperFactory == that.nTilesperFactory &&
+        return factoryBoardWidth == that.factoryBoardWidth &&
                 nFactories == that.nFactories &&
-                totalColours == that.totalColours &&
-                maxRounds == that.maxRounds &&
-                maxPoints == that.maxPoints &&
-                rowBonusPoints == that.rowBonusPoints &&
-                columnBonusPoints == that.columnBonusPoints &&
-                colorSetBonusPoints == that.colorSetBonusPoints &&
-                adjacencyBasePoints == that.adjacencyBasePoints &&
                 Arrays.equals(floorPenalties, that.floorPenalties);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(playerBoardSize, maxTilesInFloorLine, tilesInScoreTrack, factoryBoardHeight,
-                factoryBoardWidth, nTilesperFactory, nFactories, totalColours, maxRounds, maxPoints,
-                rowBonusPoints, columnBonusPoints, colorSetBonusPoints, adjacencyBasePoints);
+                factoryBoardWidth, nTilesPerFactory, nFactories, totalColours,
+                rowBonusPoints, columnBonusPoints, colorSetBonusPoints, placingTilePoints);
         result = 31 * result + Arrays.hashCode(floorPenalties);
         return result;
     }
