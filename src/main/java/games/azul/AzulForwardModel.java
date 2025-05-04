@@ -282,7 +282,7 @@ public class AzulForwardModel extends StandardForwardModel {
 
             // Check if any row in the player's wall is complete
             for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
-                if (ags.isWallRowComplete(playerID, row)) {
+                if (playerBoard.isWallRowComplete(row)) {
                     endGame(ags);
                     return true;
                 }
@@ -398,14 +398,14 @@ public class AzulForwardModel extends StandardForwardModel {
 
         // Award 2 points for any completed rows
         for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
-            if (ags.isWallRowComplete(playerID, row)) {
+            if (playerBoard.isWallRowComplete(row)) {
                 ags.addPlayerPoint(playerID, params.getRowBonusPoints());
             }
         }
 
         // Award 7 points for any completed columns
         for (int col = 0; col < playerBoard.getPlayerWall().length; col++) {
-            if (ags.isWallColComplete(playerID, col)) {
+            if (playerBoard.isWallColComplete(col)) {
                 ags.addPlayerPoint(playerID, params.getColumnBonusPoints());
             }
         }

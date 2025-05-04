@@ -52,12 +52,12 @@ public class AzulPlayerBoard extends Component {
         }
     }
 
+    /**
+     * Gets the player's Wall.
+     * @return the player's wall.
+     */
     public AzulTile[][] getPlayerWall(){
         return playerWall;
-    }
-
-    public AzulTile[][] getPatternLine() {
-        return playerPatternWall;
     }
 
     /**
@@ -310,6 +310,35 @@ public class AzulPlayerBoard extends Component {
                 playerFloorLine[col] = AzulTile.Empty;
             }
         }
+    }
+
+    /**
+     * Checks if a particular row in the player's wall is complete.
+     * @param row - The row to check.
+     * @return true if the entire row has non-empty tiles, false otherwise.
+     */
+    public boolean isWallRowComplete(int row) {
+        int wallLength = playerWall.length;
+        for (int col = 0; col < wallLength; col++) {
+            if (playerWall[row][col] == AzulTile.Empty || playerWall[row][col] == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the specified column in the player's wall is completely filled with tiles.
+     * @param col - The column to check.
+     * @return true if the entire column has non-empty tiles, false otherwise.
+     */
+    public boolean isWallColComplete(int col) {
+        for (int row = 0; row < playerWall.length; row++) {
+            if (playerWall[row][col] == AzulTile.Empty || playerWall[row][col] == null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

@@ -50,28 +50,77 @@ public class AzulGameState extends AbstractGameState {
      */
     public AzulGameState(AbstractParameters gameParameters, int nPlayers) { super(gameParameters, nPlayers); }
 
+    /**
+     * Returns the list of all factory boards in the game.
+     * @return List of AzulFactoryBoard objects.
+     */
     public List<AzulFactoryBoard> getAllFactoryBoards(){ return factoryBoards; }
+
+    /**
+     * Returns a specific factory board by its ID.
+     * @param factoryID - Index of the factory.
+     * @return AzulFactoryBoard at the specified index.
+     */
     public AzulFactoryBoard getFactory(int factoryID){ return factoryBoards.get(factoryID); }
 
-    public List<AzulPlayerBoard> getAllPlayerBoards(){ return playerBoards; }
+    /**
+     * Return a specific player's board by their ID.
+     * @param playerID - Index of the player.
+     * @return AzulPlayerBoard for the given player.
+     */
     public AzulPlayerBoard getPlayerBoard(int playerID){ return playerBoards.get(playerID); }
 
+    /**
+     * Sets the currently picked tile by the player.
+     * @param pickedTile - The tile that was picked.
+     */
     public void setPickedTile(AzulTile pickedTile) { this.pickedTile = pickedTile; }
+
+    /**
+     * Gets the tile that was most recently picked.
+     * @return the last picked AzulTile.
+     */
     public AzulTile getTilesPicked() { return pickedTile; }
+
+    /**
+     * Sets the number of tiles picked by the player.
+     * @param numOfTilesPicked - The number of tiles picked.
+     */
     public void setNumOfTilesPicked(int numOfTilesPicked) { this.numOfTilesPicked = numOfTilesPicked; }
+
+    /**
+     * Gets the number of tiles picked by the player.
+     * @return number of tiles picked.
+     */
     public int getNumOfTilesPicked() { return numOfTilesPicked; }
 
+    /**
+     * Returns the shared tile center for all players.
+     * @return AzulCenter component.
+     */
     public AzulCenter getCenter(){ return center; }
 
+    /**
+     * Sets the row index where the last tile was placed by the player.
+     * @param row - Index of row.
+     */
     public void setLastPlacedRow(int row) {
         this.lastPlacedRow = row;
     }
 
+    /**
+     * Gets the row index where the last tile was placed.
+     * @return index of the last placed row.
+     */
     public int getLastPlacedRow() {
         return lastPlacedRow;
     }
 
-
+    /**
+     * Converts the floor line of the given player into an array of penalty values.
+     * @param playerId - ID of the player.
+     * @return array of penalty values corresponding to floor tile positions.
+     */
     public int[] getFloorLineAsIndex(int playerId) {
         AzulParameters params = (AzulParameters) getGameParameters();
         AzulTile[] floorLine = getPlayerBoard(playerId).playerFloorLine;
@@ -89,14 +138,36 @@ public class AzulGameState extends AbstractGameState {
         return penaltiesForPlayer;
     }
 
+    /**
+     * Updates the current tile count tracking with a new set of counts.
+     * @param tileCounts - Hashmap containing tile type and their counts.
+     */
     public void updateAllTileCounts(HashMap<AzulTile, Integer> tileCounts) { this.tileCounts = tileCounts; }
+
+    /**
+     * Returns the current map of all tile counts in the game.
+     * @return HashMap of tile counts.
+     */
     public HashMap<AzulTile, Integer> getAllTileCounts() { return tileCounts; }
 
+    /**
+     * Updates the lid (discard pile) by adding the specified number of tiles.
+     * @param tile - The tile type to be added.
+     * @param count - Number of tiles to add.
+     */
     public void updateLid(AzulTile tile, int count) {
         lid.put(tile, lid.getOrDefault(tile, 0) + count);
     }
+
+    /**
+     * Returns the current contents of the lid (discard pile).
+     * @return HashMap of tile types and their counts.
+     */
     public HashMap<AzulTile, Integer> getLid() { return lid; }
 
+    /**
+     * Empties all tile types from the lid.
+     */
     public void EmptyLid() {
         lid.put(AzulTile.White, 0);
         lid.put(AzulTile.Orange, 0);
@@ -105,68 +176,91 @@ public class AzulGameState extends AbstractGameState {
         lid.put(AzulTile.Blue, 0);
     }
 
+    /**
+     * Sets whether the player has picked tiles from the center this round.
+     * @param hasPickedFromCenter - True if the player has picked from center.
+     */
     public void setHasPickedFromCenter(boolean hasPickedFromCenter) { this.hasPickedFromCenter = hasPickedFromCenter; }
+
+    /**
+     * Checks if the player has picked tiles from the center this round.
+     * @return True if picked from center, false otherwise.
+     */
     public boolean hasPickedFromCenter() { return hasPickedFromCenter; }
 
+    /**
+     * Sets a player's score to the given value.
+     * @param points - The new score.
+     * @param playerID - The player's ID.
+     */
     public void setPlayerScore(int points, int playerID) { playerScore[playerID] = points; }
+
+    /**
+     * Adds points to a player's score.
+     * @param playerID - ID of the player.
+     * @param points - Points to add.
+     */
     public void addPlayerPoint(int playerID, int points) { playerScore[playerID] += points; }
+
+    /**
+     * Subtracts points from a player's score, ensuring it does not go below 0.
+     * @param playerID - ID of the player.
+     * @param points - Points to subtract.
+     */
     public void subtractPlayerPoint(int playerID, int points) {
         playerScore[playerID] -= points;
 
         if (playerScore[playerID] < 0) playerScore[playerID] = 0;
     }
 
+    /**
+     * Calculates the number of fully completed rows on the player's wall.
+     * @param gs - Current game state.
+     * @param playerId - Player's ID.
+     * @return number of completed rows.
+     */
     public double getCompletedWallRows(AbstractGameState gs, int playerId) {
         AzulParameters params = (AzulParameters) gs.getGameParameters();
+        AzulGameState ags = (AzulGameState) gs;
         int completedRows = 0;
         int rowSize = params.getBoardSize();
+        AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerId);
 
         for (int row = 0; row < rowSize; row++) {
-            if (isWallRowComplete(playerId, row)) {
+            if (playerBoard.isWallRowComplete(row)) {
                 completedRows++;
             }
         }
         return completedRows;
     }
 
+    /**
+     * Calculates the number of fully completed columns on the player's wall.
+     * @param gs - Current game state.
+     * @param playerId - Player's ID.
+     * @return number of completed columns.
+     */
     public double getCompletedWallCols(AbstractGameState gs, int playerId) {
         AzulParameters params = (AzulParameters) gs.getGameParameters();
+        AzulGameState ags = (AzulGameState) gs;
         int completedCols = 0;
         int colSize = params.getBoardSize();
+        AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerId);
 
         for (int col=0; col < colSize; col++){
-            if (isWallColComplete(playerId, col)){
+            if (playerBoard.isWallColComplete(col)){
                 completedCols++;
             }
         }
         return completedCols;
     }
 
-    // Moved to player board?
-    public boolean isWallRowComplete(int playerId, int row) {
-        AzulPlayerBoard playerBoard = getPlayerBoard(playerId);
-        int wallLength = playerBoard.getPlayerWall().length;
-        for (int col = 0; col < wallLength; col++) {
-            if (playerBoard.getPlayerWall()[row][col] == AzulTile.Empty || playerBoard.getPlayerWall()[row][col] == null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // Moved to player board?
-    public boolean isWallColComplete(int playerId, int col) {
-        AzulPlayerBoard playerBoard = getPlayerBoard(playerId);
-        int wallLength = playerBoard.getPlayerWall().length;
-
-        for (int row = 0; row < wallLength; row++) {
-            if (playerBoard.getPlayerWall()[row][col] == AzulTile.Empty || playerBoard.getPlayerWall()[row][col] == null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
+    /**
+     * Calculates the number of colour sets (one tile of each colour in a column) completed by the player.
+     * @param gs - Current game state.
+     * @param playerID - Player's ID.
+     * @return number of completed colour sets.
+     */
     public int getCompletedColorSets(AbstractGameState gs, int playerID) {
         AzulParameters params = (AzulParameters) gs.getGameParameters();
         int wallSize = params.getBoardSize();
@@ -193,6 +287,12 @@ public class AzulGameState extends AbstractGameState {
         return completedSetCount;
     }
 
+    /**
+     * Calculates the total negative points a player will incur this round due to their floor line.
+     * @param gs - Current game state.
+     * @param playerId - ID of the player.
+     * @return total penalty points.
+     */
     public int getNegativePointsInRound(AbstractGameState gs, int playerId) {
         AzulParameters params = (AzulParameters) gs.getGameParameters();
 
