@@ -1,0 +1,11 @@
+Game: Azul, Players: 2, Mode: RANDOM, TotalGames: 100, GamesPerMatchup: 100
+MCTSPlayer got 99.00 points. MCTSPlayer won 99.0% of the 100 games of the tournament. MCTSPlayer won 99.0% of the 100 games it played during the tournament.
+MCTSPlayer won 99.0% of the 100 games against RandomPlayer.
+
+RandomPlayer got 1.00 points. RandomPlayer won 1.0% of the 100 games of the tournament. RandomPlayer won 1.0% of the 100 games it played during the tournament.
+RandomPlayer won 1.0% of the 100 games against MCTSPlayer.
+
+---- Ranking ---- (+/- are standard errors on the mean calculated using a Normal approximation) 
+MCTSPlayer: Win rate 0.99 +/- 0.010	Mean Ordinal 1.01 +/- 0.01
+RandomPlayer: Win rate 0.01 +/- 0.010	Mean Ordinal 1.99 +/- 0.01
+

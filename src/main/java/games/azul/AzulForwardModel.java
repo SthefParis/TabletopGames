@@ -89,53 +89,6 @@ public class AzulForwardModel extends StandardForwardModel {
         ags.setGamePhase(AzulGameState.AzulPhase.FactoryOffer);
     }
 
-    @Override
-    protected void _afterAction(AbstractGameState currentState, AbstractAction action) {
-        if (currentState.isActionInProgress()) return;
-
-        // Each turn begins with the player picking up a tile
-        // after which those tiles will be place on a player board
-        AzulGameState ags = (AzulGameState) currentState;
-
-        if (!checkEndOfRound(ags)) {
-            if (ags.getGamePhase() == AzulGameState.AzulPhase.FactoryOffer) {
-                if (action instanceof PickUpTilesAction) {
-//                    System.out.println("Player " + ags.getCurrentPlayer() + " picked up tiles.");
-
-                    // Move to the next phase where player places tiles
-                    ags.setGamePhase(AzulGameState.AzulPhase.PlaceTile);
-                }
-            } else if (ags.getGamePhase() == AzulGameState.AzulPhase.PlaceTile) {
-                if (action instanceof PlaceTileAction) {
-//                    System.out.println("Player " + ags.getCurrentPlayer() + " placed tiles.");
-                    int nextPlayer = (ags.getCurrentPlayer() + 1) % ags.getNPlayers();
-                    ags.setTurnOwner(nextPlayer);
-                    endPlayerTurn(ags, nextPlayer);
-                    ags.setGamePhase(AzulGameState.AzulPhase.FactoryOffer);
-                }
-            }
-//            else if (ags.getGamePhase() == AzulGameState.AzulPhase.WallTiling) {
-//                // Check if all players have completed their wall-tiling phase
-//                boolean allPlayersCompleted = true;
-//                System.out.println("Wall tile");
-//                for (int i = 0; i < ags.getNPlayers(); i++) {
-//                    if (!isPlayerWallTilingComplete(ags, i)) {
-//                        allPlayersCompleted = false;
-//                        break;
-//                    }
-//                }
-//
-//                // If all players have finished, move to the next phase
-//                if (allPlayersCompleted) {
-////                    System.out.println("All players have completed wall tiling. Moving to next phase.");
-//                    ags.setGamePhase(AzulGameState.AzulPhase.PrepNextRnd);
-//                }
-//            }
-        } else {
-            ags.setGamePhase(AzulGameState.AzulPhase.FactoryOffer);
-        }
-    }
-
     /**
      * r     * @return - List of AbstractAction objects.
      */
@@ -156,11 +109,9 @@ public class AzulForwardModel extends StandardForwardModel {
         int playerID = ags.getCurrentPlayer();
 
         if (AzulGameState.AzulPhase.FactoryOffer.equals(ags.getGamePhase())) {
-//            System.out.println("In factory offer");
-            actions.addAll(pickUpTileActions(ags, playerID));
+            actions.addAll(pickUpTileFromFactoryAction(ags, playerID));
             actions.addAll(pickUpTileFromCenterAction(ags, playerID));
         } else if (AzulGameState.AzulPhase.PlaceTile.equals(ags.getGamePhase())) {
-//            System.out.println("In place tile");
             actions.addAll(placeTileActions(ags, playerID));
         }
 
@@ -171,222 +122,41 @@ public class AzulForwardModel extends StandardForwardModel {
         return actions;
     }
 
+    @Override
+    protected void _afterAction(AbstractGameState currentState, AbstractAction action) {
+        if (currentState.isActionInProgress()) return;
 
-    private boolean isPlayerWallTilingComplete(AzulGameState ags, int playerID) {
-        AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
+        // Each turn begins with the player picking up a tile
+        // after which those tiles will be place on a player board
+        AzulGameState ags = (AzulGameState) currentState;
 
-        // Check all rows on the player's wall, and if any row is not fully filled, return false
-        for (int row = 0; row < playerBoard.playerPatternWall.length; row++) {
-            if (playerBoard.isPatternLineRowFull(row)) { // && !playerBoard.isRowTiled(row)
-                return false;  // The player still has unfinished tiling on this row
-            }
-        }
+        if (!checkEndOfRound(ags)) {
+            if (ags.getGamePhase() == AzulGameState.AzulPhase.FactoryOffer) {
+                if (action instanceof PickUpTilesAction) {
 
-        // If all rows are tiled, return true
-        return true;
-    }
-
-    public boolean checkEndOfRound(AzulGameState ags) {
-        if (isFactoriesAndCentreEmpty(ags)){
-//            System.out.println("Round is ending: Factories and center are empty");
-
-            endRound(ags);
-            // Wall tile
-            executeWallTilingPhase(ags);
-
-            for (int playerID = 0; playerID < ags.getNPlayers(); playerID++){
-                calculateFloorLinePenalty(ags, ags.getPlayerBoard(playerID), playerID);
-                ags.getPlayerBoard(playerID).clearFloorLine(ags);
-            }
-
-//            endRound(ags);
-
-            // Check if game has ended
-            if (checkEndOfGame(ags)) {
-                for (int playerID = 0; playerID < ags.getNPlayers(); playerID++) {
-                    AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
-                    calculateBonusPoints(ags, playerBoard, playerID);
+                    // Move to the next phase where player places tiles
+                    ags.setGamePhase(AzulGameState.AzulPhase.PlaceTile);
                 }
-                return true;
+            } else if (ags.getGamePhase() == AzulGameState.AzulPhase.PlaceTile) {
+                if (action instanceof PlaceTileAction) {
+                    int nextPlayer = (ags.getCurrentPlayer() + 1) % ags.getNPlayers();
+                    ags.setTurnOwner(nextPlayer);
+                    endPlayerTurn(ags, nextPlayer);
+                    ags.setGamePhase(AzulGameState.AzulPhase.FactoryOffer);
+                }
             }
-
-            // Prep for next round if game has not ended
-            executePrepNextRound(ags);
-
-            return true;
+        } else {
+            ags.setGamePhase(AzulGameState.AzulPhase.FactoryOffer);
         }
-
-        return false;
     }
 
     /**
-     *
+     * Generates a list of all valid pick-up tile actions from factories for the current player.
      * @param ags - Game state.
-     * @param playerID - ID of player who has just completed a wall tiling action.
-     * @param row - Row where tile has been placed.
-     * @param col - Column where tile has been placed.
+     * @param playerID - ID of the player whose turn it is.
+     * @return list of valid pick-up actions.
      */
-    private void executeScoring(AzulGameState ags, int playerID, int row, int col) {
-
-        AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
-        int score = (int) ags.getGameScore(playerID);
-
-        // Find tile that has just been placed and score it
-        if (playerBoard.getPlayerWall()[row][col] != AzulTile.Empty && playerBoard.getPlayerWall()[row][col] != null) {
-            int tileScore = calculateTileScore(ags, playerBoard, row, col);
-            score += tileScore;
-        }
-
-        ags.setPlayerScore(score, playerID);
-    }
-
-    private int calculateTileScore(AzulGameState ags, AzulPlayerBoard playerBoard, int row, int col) {
-        AzulParameters params = (AzulParameters) ags.getGameParameters();
-        int score = params.getPlacingTilePoints();  // Scores one for placing tile down
-
-        // Count connected tiles in the row
-        int rowCount = 1 + countTilesInDirection(playerBoard, row, col, 0, -1) // Left
-                + countTilesInDirection(playerBoard, row, col, 0, 1); // Right
-
-//        // Count connected tiles in the column
-        int colCount = 1 + countTilesInDirection(playerBoard, row, col, -1, 0) // Up
-                + countTilesInDirection(playerBoard, row, col, 1, 0); // Down
-
-        // If part of a line, score the entire line
-        score += (rowCount > 1 ? rowCount - 1 : 0) + (colCount > 1 ? colCount - 1 : 0);
-
-        // If intersection is formed, tile is scored twice
-        if (rowCount > 1 && colCount > 1) score++;
-
-        return score;
-    }
-
-    private int countTilesInDirection(AzulPlayerBoard playerBoard, int row, int col, int dRow, int dCol){
-        int count = 0;
-        int newRow = row + dRow;
-        int newCol = col + dCol;
-
-        while (newRow >= 0 && newRow < playerBoard.getPlayerWall().length &&
-                newCol >= 0 && newCol < playerBoard.getPlayerWall()[0].length &&
-                playerBoard.getPlayerWall()[newRow][newCol] != AzulTile.Empty &&
-                playerBoard.getPlayerWall()[newRow][newCol] != null ) {
-            count++;
-            newRow += dRow;
-            newCol += dCol;
-        }
-        return count;
-    }
-
-    private void calculateFloorLinePenalty(AzulGameState ags, AzulPlayerBoard playerBoard, int playerID) {
-        AzulParameters params = (AzulParameters) ags.getGameParameters();
-        int[] penaltyValues = params.floorPenalties;
-        int penalty = 0;
-
-        for (int i = 0; i < playerBoard.playerFloorLine.length; i++) {
-            if (playerBoard.isFloorLineOccupied(i)) {
-                penalty += penaltyValues[i];
-            }
-        }
-//        int playerScore = (int) ags.getGameScore(playerID);
-//        playerScore = playerScore - penalty;
-//        ags.setPlayerScore(playerScore, playerID);
-        ags.subtractPlayerPoint(playerID, penalty);
-    }
-
-    private boolean checkEndOfGame(AzulGameState ags){
-        for (int playerID = 0; playerID < ags.getNPlayers(); playerID++) {
-            AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
-
-            // Check if any row in the player's wall is complete
-            for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
-                if (ags.isWallRowComplete(playerID, row)) {
-                    //System.out.println("Game ends: Player" + playerID + " has completed a row: " + Arrays.deepToString(ags.getPlayerBoard(playerID).playerWall));
-                    endGame(ags);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private void calculateBonusPoints(AzulGameState ags, AzulPlayerBoard playerBoard, int playerID) {
-        AzulParameters params = (AzulParameters) ags.getGameParameters();
-
-        // Award 2 points for any completed rows
-        for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
-            if (ags.isWallRowComplete(playerID, row)) {
-                ags.addPlayerPoint(playerID, params.getRowBonusPoints());
-                //System.out.println("Player " + playerID + " has completed row " + row + " and gained 2 points.");
-            }
-        }
-
-        // Award 7 points for any completed columns
-        for (int col = 0; col < playerBoard.getPlayerWall().length; col++) {
-            if (ags.isWallColComplete(playerID, col)) {
-                ags.addPlayerPoint(playerID, params.getColumnBonusPoints());
-                //System.out.println("Player " + playerID + " has completed col " + col + " and gained 7 points.");
-            }
-        }
-
-        Map<AzulTile, Integer> colorCount = new HashMap<>();
-
-        for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
-            for (int col = 0; col < playerBoard.getPlayerWall().length; col++) {
-                AzulTile tile = playerBoard.getPlayerWall()[row][col];
-                if (tile != AzulTile.Empty && tile != null) {
-                    colorCount.put(tile, colorCount.getOrDefault(tile, 0) + 1);
-                }
-            }
-        }
-
-        // Award 10 points for each colour that appears exactly 5 times
-        for (Map.Entry<AzulTile, Integer> entry : colorCount.entrySet()) {
-            if (entry.getValue() == 5) {
-                ags.addPlayerPoint(playerID, params.getColorSetBonusPoints());
-                //intln("Player " + playerID + " has placed all 5 tiles of colour " + entry.getKey() + " and gained 10 points.");
-            }
-        }
-        //System.out.println("Player " + playerID + " points after bonus: " + ags.getGameScore(playerID));
-    }
-
-    private void executeWallTilingPhase(AzulGameState ags) {
-        AzulParameters params = (AzulParameters) ags.getGameParameters();
-        ags.setGamePhase(AzulGameState.AzulPhase.WallTiling);
-        for (int playerID = 0; playerID < ags.getNPlayers(); playerID++) {
-            AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
-
-            // Check all rows on the player's wall
-            for (int row = 0; row < playerBoard.playerPatternWall.length; row++) {
-                AzulTile tile = playerBoard.getTileAt(row);
-                int col = params.getTileColPositionInRow(row, tile);
-
-                if (playerBoard.isPatternLineRowFull(row) && playerBoard.isPositionEmpty(row, col)) {
-                    if (col != -1) {
-                        boolean tilePlaced = playerBoard.placeTileInWall(ags, tile, row, col);
-
-                        if (tilePlaced) {
-                            executeScoring(ags, playerID, row, col);
-                        }
-                    }
-                }
-                if (playerBoard.isPatternLineRowFull(row) && !playerBoard.isPositionEmpty(row, col)) {
-                    playerBoard.clearRowOnPatternLine(ags, row, -1);
-                }
-            }
-        }
-    }
-
-    private void executePrepNextRound(AzulGameState ags) {
-        ags.setGamePhase(AzulGameState.AzulPhase.PrepNextRnd);
-        for (AzulFactoryBoard factory : ags.getAllFactoryBoards()) {
-            factory.refill(ags);
-        }
-
-        ags.getCenter().addFirstPlayerTile();
-        ags.setHasPickedFromCenter(false);
-    }
-
-    private ArrayList<AbstractAction> pickUpTileActions(AzulGameState ags, int playerID) {
+    private ArrayList<AbstractAction> pickUpTileFromFactoryAction(AzulGameState ags, int playerID) {
         ArrayList<AbstractAction> actions = new ArrayList<>();
 
         List<AzulFactoryBoard> factoryBoards = ags.getAllFactoryBoards();
@@ -415,18 +185,12 @@ public class AzulForwardModel extends StandardForwardModel {
         return actions;
     }
 
-    private boolean isFactoriesAndCentreEmpty(AzulGameState ags) {
-        // Checks if all factory boards are empty
-        for (AzulFactoryBoard factory : ags.getAllFactoryBoards()) {
-            if (!factory.isEmpty()) {
-                return false;
-            }
-        }
-
-        // Check if center is empty
-        return ags.getCenter().isEmpty();
-    }
-
+    /**
+     * Generates a list of valid pick-up actions from the center for the current player.
+     * @param ags - Game state.
+     * @param playerID - ID of the player whose turn it is.
+     * @return list of center pick-up actions.
+     */
     private ArrayList<AbstractAction> pickUpTileFromCenterAction(AzulGameState ags, int playerID) {
         ArrayList<AbstractAction> actions = new ArrayList<>();
         AzulCenter center = ags.getCenter();
@@ -443,6 +207,12 @@ public class AzulForwardModel extends StandardForwardModel {
         return actions;
     }
 
+    /**
+     * Generates a list of valid tile placement actions for the current player.
+     * @param ags - Game state.
+     * @param playerID - ID of the player whose turn it is.
+     * @return list of tile placement actions.
+     */
     private ArrayList<AbstractAction> placeTileActions(AzulGameState ags, int playerID) {
         ArrayList<AbstractAction> actions = new ArrayList<>();
         AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
@@ -463,5 +233,264 @@ public class AzulForwardModel extends StandardForwardModel {
         }
 
         return actions;
+    }
+
+    /**
+     * Checks whether the round should end (all factories and center are empty).
+     * If so, proceeds to end-round tasks: wall tiling, scoring, penalty and game end check.
+     * @param ags - Game state.
+     * @return true if the round ends (and possibly the game), false otherwise
+     */
+    public boolean checkEndOfRound(AzulGameState ags) {
+        if (isFactoriesAndCentreEmpty(ags)){
+
+            endRound(ags);
+            // Wall tile
+            executeWallTilingPhase(ags);
+
+            for (int playerID = 0; playerID < ags.getNPlayers(); playerID++){
+                calculateFloorLinePenalty(ags, ags.getPlayerBoard(playerID), playerID);
+                ags.getPlayerBoard(playerID).clearFloorLine(ags);
+            }
+
+            // Check if game has ended
+            if (checkEndOfGame(ags)) {
+                for (int playerID = 0; playerID < ags.getNPlayers(); playerID++) {
+                    AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
+                    calculateBonusPoints(ags, playerBoard, playerID);
+                }
+                return true;
+            }
+
+            // Prep for next round if game has not ended
+            executePrepNextRound(ags);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the game has ended by checking for any completed wall rows.
+     * @param ags - Game state.
+     * @return true if the game should end, false otherwise.
+     */
+    private boolean checkEndOfGame(AzulGameState ags){
+        for (int playerID = 0; playerID < ags.getNPlayers(); playerID++) {
+            AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
+
+            // Check if any row in the player's wall is complete
+            for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
+                if (ags.isWallRowComplete(playerID, row)) {
+                    endGame(ags);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Calculates and applies score after a tile is placed on the wall.
+     * @param ags - Game state.
+     * @param playerID - ID of player who has just completed a wall tiling action.
+     * @param row - Row where tile has been placed.
+     * @param col - Column where tile has been placed.
+     */
+    private void executeScoring(AzulGameState ags, int playerID, int row, int col) {
+
+        AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
+        int score = (int) ags.getGameScore(playerID);
+
+        // Find tile that has just been placed and score it
+        if (playerBoard.getPlayerWall()[row][col] != AzulTile.Empty && playerBoard.getPlayerWall()[row][col] != null) {
+            int tileScore = calculateTileScore(ags, playerBoard, row, col);
+            score += tileScore;
+        }
+
+        ags.setPlayerScore(score, playerID);
+    }
+
+    /**
+     * Calculates the score of a tile just placed on the wall based on adjacent tiles.
+     * @param ags - Game state.
+     * @param playerBoard - The player's board.
+     * @param row - Row of the placed tile.
+     * @param col - Column of the placed tile.
+     * @return the score for the tile.
+     */
+    private int calculateTileScore(AzulGameState ags, AzulPlayerBoard playerBoard, int row, int col) {
+        AzulParameters params = (AzulParameters) ags.getGameParameters();
+        int score = params.getPlacingTilePoints();  // Scores one for placing tile down
+
+        // Count connected tiles in the row
+        int rowCount = 1 + countTilesInDirection(playerBoard, row, col, 0, -1) // Left
+                + countTilesInDirection(playerBoard, row, col, 0, 1); // Right
+
+        // Count connected tiles in the column
+        int colCount = 1 + countTilesInDirection(playerBoard, row, col, -1, 0) // Up
+                + countTilesInDirection(playerBoard, row, col, 1, 0); // Down
+
+        // If part of a line, score the entire line
+        score += (rowCount > 1 ? rowCount - 1 : 0) + (colCount > 1 ? colCount - 1 : 0);
+
+        // If intersection is formed, tile is scored twice
+        if (rowCount > 1 && colCount > 1) score++;
+
+        return score;
+    }
+
+    /**
+     * Recursively counts adjacent tiles in a given direction from a starting tile.
+     * @param playerBoard - The player's board.
+     * @param row - Starting row.
+     * @param col - Starting column.
+     * @param dRow - Row direction increment.
+     * @param dCol - Column direction increment.
+     * @return the number of adjacent tiles in that direction.
+     */
+    private int countTilesInDirection(AzulPlayerBoard playerBoard, int row, int col, int dRow, int dCol){
+        int count = 0;
+        int newRow = row + dRow;
+        int newCol = col + dCol;
+
+        while (newRow >= 0 && newRow < playerBoard.getPlayerWall().length &&
+                newCol >= 0 && newCol < playerBoard.getPlayerWall()[0].length &&
+                playerBoard.getPlayerWall()[newRow][newCol] != AzulTile.Empty &&
+                playerBoard.getPlayerWall()[newRow][newCol] != null ) {
+            count++;
+            newRow += dRow;
+            newCol += dCol;
+        }
+        return count;
+    }
+
+    /**
+     * Calculates and applies floor line penalty points to a player.
+     * @param ags - Game state.
+     * @param playerBoard - The player's board.
+     * @param playerID - ID of the player being penalized.
+     */
+    private void calculateFloorLinePenalty(AzulGameState ags, AzulPlayerBoard playerBoard, int playerID) {
+        AzulParameters params = (AzulParameters) ags.getGameParameters();
+        int[] penaltyValues = params.floorPenalties;
+        int penalty = 0;
+
+        for (int i = 0; i < playerBoard.playerFloorLine.length; i++) {
+            if (playerBoard.isFloorLineOccupied(i)) {
+                penalty += penaltyValues[i];
+            }
+        }
+
+        ags.subtractPlayerPoint(playerID, penalty);
+    }
+
+    /**
+     * Calculates and adds bonus points to a player at game end.
+     * Bonuses include completed rows, columns, and full sets of tile colors.
+     * @param ags - Game state.
+     * @param playerBoard - The player's board.
+     * @param playerID - ID of the player receiving bonuses.
+     */
+    private void calculateBonusPoints(AzulGameState ags, AzulPlayerBoard playerBoard, int playerID) {
+        AzulParameters params = (AzulParameters) ags.getGameParameters();
+
+        // Award 2 points for any completed rows
+        for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
+            if (ags.isWallRowComplete(playerID, row)) {
+                ags.addPlayerPoint(playerID, params.getRowBonusPoints());
+            }
+        }
+
+        // Award 7 points for any completed columns
+        for (int col = 0; col < playerBoard.getPlayerWall().length; col++) {
+            if (ags.isWallColComplete(playerID, col)) {
+                ags.addPlayerPoint(playerID, params.getColumnBonusPoints());
+            }
+        }
+
+        Map<AzulTile, Integer> colorCount = new HashMap<>();
+
+        for (int row = 0; row < playerBoard.getPlayerWall().length; row++) {
+            for (int col = 0; col < playerBoard.getPlayerWall().length; col++) {
+                AzulTile tile = playerBoard.getPlayerWall()[row][col];
+                if (tile != AzulTile.Empty && tile != null) {
+                    colorCount.put(tile, colorCount.getOrDefault(tile, 0) + 1);
+                }
+            }
+        }
+
+        // Award 10 points for each colour that appears exactly 5 times
+        for (Map.Entry<AzulTile, Integer> entry : colorCount.entrySet()) {
+            if (entry.getValue() == 5) {
+                ags.addPlayerPoint(playerID, params.getColorSetBonusPoints());
+                //intln("Player " + playerID + " has placed all 5 tiles of colour " + entry.getKey() + " and gained 10 points.");
+            }
+        }
+    }
+
+    /**
+     * Performs wall tiling phase for all players.
+     * Moves completed pattern line tiles to the wall and scores them.
+     * @param ags - Game state.
+     */
+    private void executeWallTilingPhase(AzulGameState ags) {
+        AzulParameters params = (AzulParameters) ags.getGameParameters();
+        ags.setGamePhase(AzulGameState.AzulPhase.WallTiling);
+        for (int playerID = 0; playerID < ags.getNPlayers(); playerID++) {
+            AzulPlayerBoard playerBoard = ags.getPlayerBoard(playerID);
+
+            // Check all rows on the player's wall
+            for (int row = 0; row < playerBoard.playerPatternWall.length; row++) {
+                AzulTile tile = playerBoard.getTileAt(row);
+                int col = params.getTileColPositionInRow(row, tile);
+
+                if (playerBoard.isPatternLineRowFull(row) && playerBoard.isPositionEmpty(row, col)) {
+                    if (col != -1) {
+                        boolean tilePlaced = playerBoard.placeTileInWall(ags, tile, row, col);
+
+                        if (tilePlaced) {
+                            executeScoring(ags, playerID, row, col);
+                        }
+                    }
+                }
+                if (playerBoard.isPatternLineRowFull(row) && !playerBoard.isPositionEmpty(row, col)) {
+                    playerBoard.clearRowOnPatternLine(ags, row, -1);
+                }
+            }
+        }
+    }
+
+    /**
+     * Prepares the game state for the next round by refilling factories and resetting flags.
+     * @param ags - Game state.
+     */
+    private void executePrepNextRound(AzulGameState ags) {
+        ags.setGamePhase(AzulGameState.AzulPhase.PrepNextRnd);
+        for (AzulFactoryBoard factory : ags.getAllFactoryBoards()) {
+            factory.refill(ags);
+        }
+
+        ags.getCenter().addFirstPlayerTile();
+        ags.setHasPickedFromCenter(false);
+    }
+
+    /**
+     * Checks if all factory boards and the center are empty.
+     * @param ags - Game state.
+     * @return true if all factories are empty, false otherwise.
+     */
+    private boolean isFactoriesAndCentreEmpty(AzulGameState ags) {
+        // Checks if all factory boards are empty
+        for (AzulFactoryBoard factory : ags.getAllFactoryBoards()) {
+            if (!factory.isEmpty()) {
+                return false;
+            }
+        }
+
+        // Check if center is empty
+        return ags.getCenter().isEmpty();
     }
 }
