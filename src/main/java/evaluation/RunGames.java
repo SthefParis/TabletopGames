@@ -56,6 +56,7 @@ public class RunGames implements IGameRunner {
         /* 1. Settings for the tournament */
         RunGames runGames = new RunGames();
         runGames.config = parseConfig(args, Collections.singletonList(Usage.RunGames));
+        
 
         runGames.initialiseGamesAndPlayerCount();
         if (!runGames.config.get(RunArg.gameParams).equals("") && runGames.gamesAndPlayerCounts.keySet().size() > 1)
@@ -66,11 +67,11 @@ public class RunGames implements IGameRunner {
         if (!runGames.config.get(playerDirectory).equals("")) {
             agents.addAll(PlayerFactory.createPlayers((String) runGames.config.get(playerDirectory)));
         } else {
-       //     agents.add(new MCTSPlayer());
-            agents.add(new BasicMCTSPlayer());
+            agents.add(new MCTSPlayer());
+//            agents.add(new BasicMCTSPlayer());
             agents.add(new RandomPlayer());
-            agents.add(new RMHCPlayer());
-            agents.add(new OSLAPlayer());
+//            agents.add(new RMHCPlayer());
+//            agents.add(new OSLAPlayer());
         }
         runGames.agents = agents;
 

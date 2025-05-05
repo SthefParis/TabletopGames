@@ -694,5 +694,4 @@ public abstract class AbstractGameState {
         }
         return -1;
     }
-
 }

@@ -5,6 +5,10 @@ import core.AbstractGameState;
 import core.AbstractParameters;
 import core.Game;
 import core.rules.AbstractRuleBasedForwardModel;
+import games.azul.AzulForwardModel;
+import games.azul.AzulGUIManager;
+import games.azul.AzulGameState;
+import games.azul.AzulParameters;
 import games.battlelore.BattleloreForwardModel;
 import games.battlelore.BattleloreGameParameters;
 import games.battlelore.BattleloreGameState;
@@ -293,7 +297,11 @@ public enum GameType {
     Saboteur(3, 10,
             Arrays.asList(Strategy, Abstract),
             Arrays.asList(TakeThat, VariablePlayerPowers),
-            SaboteurGameState.class, SaboteurForwardModel.class, SaboteurGameParameters.class, SaboteurGUIManager.class);
+            SaboteurGameState.class, SaboteurForwardModel.class, SaboteurGameParameters.class, SaboteurGUIManager.class),
+    Azul(2, 4,
+            Arrays.asList(Strategy, Abstract),
+            Arrays.asList(),
+            AzulGameState .class, AzulForwardModel .class, AzulParameters .class, AzulGUIManager .class);;
 
     // Core classes where the game is defined
     final Class<? extends AbstractGameState> gameStateClass;
